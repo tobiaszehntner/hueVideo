@@ -1,5 +1,6 @@
 #include "ofApp.h"
 
+
 //--------------------------------------------------------------
 void ofApp::setup(){
     ofBackground(255);
@@ -8,6 +9,8 @@ void ofApp::setup(){
     video.loadMovie("video.mov");
     
     video.play();
+    
+    FirstClass
 
 }
 
