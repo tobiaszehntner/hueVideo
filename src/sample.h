@@ -15,11 +15,12 @@ public: // place public functions or variables declarations here
     void draw();    // draw method, this where you'll do the object's drawing
     
     // variables
-    float x;      // position
-    float y;
-    float w;      // width and height
-    float h;
+    int x;      // position
+    int y;
+    int w;      // width and height
+    int h;
     ofColor color; // color using ofColor type
+    int number;
     
     Sample(); // constructor - used to initialize an object, if no properties are passed the program sets them to the default value
 private: // place private functions or variables declarations here

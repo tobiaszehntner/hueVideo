@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "sample.h"
 
 class ofApp : public ofBaseApp{
 
@@ -21,13 +22,6 @@ class ofApp : public ofBaseApp{
     
     ofVideoPlayer video;
     
-    class FirstClass{
-    public:
-        FirstClass();
-        int howManyClasses();
-        
-    private:
-        int classProperty;
-    };
+    Sample sample1;
 		
 };

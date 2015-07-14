@@ -3,14 +3,15 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+    ofSetWindowTitle("hueVideo");
+    
     ofBackground(255);
     
-    
     video.loadMovie("video.mov");
+    //video.play();
     
-    video.play();
+    sample1.setup();
     
-    FirstClass
 
 }
 
@@ -22,7 +23,8 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     
-    video.draw(0, 100, ofGetScreenWidth(), (ofGetScreenWidth()/16*9));
+    video.draw(0, 100, ofGetWindowWidth(), (ofGetWindowWidth()/16*9));
+    sample1.draw();
 }
 
 //--------------------------------------------------------------
