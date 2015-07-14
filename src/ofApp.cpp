@@ -8,9 +8,15 @@ void ofApp::setup(){
     ofBackground(255);
     
     video.loadMovie("video.mov");
-    //video.play();
+    video.setVolume(0);
+    video.play();
+    videoFrame.allocate(
+                        video.getWidth(),
+                        video.getHeight(),
+                        OF_IMAGE_COLOR);
     
     sample1.setup();
+    
     
 
 }
@@ -18,13 +24,35 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
     video.update();
+    
+    
+    if(video.isFrameNew()) {
+        
+        
+        videoFrame.setFromPixels(
+                                 video.getPixels(),
+                                 video.getWidth(),
+                                 video.getHeight(),
+                                 OF_IMAGE_COLOR);
+        
+        sample1.sampling(videoFrame);
+        
+    }
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
     
     video.draw(0, 100, ofGetWindowWidth(), (ofGetWindowWidth()/16*9));
+    
     sample1.draw();
+    
+    ofSetColor(sample1.color_sample);
+    ofFill();
+    
+    ofRect(10, 10, 50, 50);
+    
 }
 
 //--------------------------------------------------------------
