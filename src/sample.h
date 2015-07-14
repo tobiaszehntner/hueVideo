@@ -14,15 +14,19 @@ public: // place public functions or variables declarations here
     void update();  // update method, used to refresh your objects properties
     void draw();    // draw method, this where you'll do the object's drawing
     
+    void sampling(ofImage frame);
+    
     // variables
-    int x;      // position
-    int y;
-    int w;      // width and height
-    int h;
-    ofColor color; // color using ofColor type
+    int x, y, w, h;
+    int r, g, b;
+    
+    ofColor color_wireframe; // color using ofColor type
+    ofColor color_sample;
     int number;
+    int samplePix[3];
     
     Sample(); // constructor - used to initialize an object, if no properties are passed the program sets them to the default value
+    
 private: // place private functions or variables declarations here
 };
 

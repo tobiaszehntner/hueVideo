@@ -21,6 +21,7 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
     
     ofVideoPlayer video;
+    ofImage videoFrame;
     
     Sample sample1;
 		
