@@ -20,5 +20,14 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
     
     ofVideoPlayer video;
+    
+    class FirstClass{
+    public:
+        FirstClass();
+        int howManyClasses();
+        
+    private:
+        int classProperty;
+    };
 		
 };
