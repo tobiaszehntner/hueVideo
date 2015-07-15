@@ -44,13 +44,13 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     
+    ofSetColor(255);
     video.draw(0, 100, ofGetWindowWidth(), (ofGetWindowWidth()/16*9));
     
     sample1.draw();
     
     ofSetColor(sample1.color_sample);
-    ofFill();
-    
+    ofFill();    
     ofRect(10, 10, 50, 50);
     
 }
