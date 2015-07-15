@@ -14,7 +14,7 @@ public: // place public functions or variables declarations here
     void update();  // update method, used to refresh your objects properties
     void draw();    // draw method, this where you'll do the object's drawing
     
-    void sampling(ofImage frame);
+    void sampling(ofPixels& frame);
     
     // variables
     int x, y, w, h;

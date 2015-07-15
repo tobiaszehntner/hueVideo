@@ -39,29 +39,31 @@ void Sample::draw(){
     
 }
 
-void Sample::sampling(ofImage frame) {
+void Sample::sampling(ofPixels& frame) {
     
     frame.crop(x, y, w, h);
     
     int newW = w;
     int newH = h;
     
-    while(newH > 1) {
-        newH = newH/2;
-        if(newW > 1) {
-            newW = newW/2;
-        }
-        frame.resize(newW, newH);
-        
-    }
+//    while(newH > 1) {
+//        newH = newH/2;
+//        if(newW > 1) {
+//            newW = newW/2;
+//        }
+//        frame.resize(newW, newH);
+//        
+//    }
+    
+    frame.resize(1, 1);
     
     unsigned char* pixels = frame.getPixels();
     
-    color_sample.set(r, g, b);
-    r = (int)pixels[15];
-    g = (int)pixels[79];
-    b = (int)pixels[80];
     
+    r = frame[0];
+    g = frame[1];
+    b = frame[2];
+    color_sample.set(r, g, b);
     
      cout << "r=" << r << " g=" << g << " b=" << b << endl;
     
