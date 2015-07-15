@@ -23,7 +23,6 @@ public: // place public functions or variables declarations here
     ofColor color_wireframe; // color using ofColor type
     ofColor color_sample;
     int number;
-    int samplePix[3];
     
     Sample(); // constructor - used to initialize an object, if no properties are passed the program sets them to the default value
     
