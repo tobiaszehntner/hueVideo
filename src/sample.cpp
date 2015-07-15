@@ -42,16 +42,17 @@ void Sample::sampling(ofPixels& frame) {
     int newW = w;
     int newH = h;
     
-//    while(newH > 1) {
-//        newH = newH/2;
-//        if(newW > 1) {
-//            newW = newW/2;
-//        }
-//        frame.resize(newW, newH);
-//        
-//    }
+    while(newH > 1) {
+        newH = newH/2;
+        if(newW > 1) {
+            newW = newW/2;
+        }
+        frame.resize(newW, newH);
+        
+    }
+    cout << frame.getWidth() << endl;
     
-    color_sample = frame.getColor(25, 25);
+    color_sample = frame.getColor(0, 0);
     
     
     
