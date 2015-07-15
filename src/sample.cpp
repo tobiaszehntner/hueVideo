@@ -8,24 +8,18 @@ Sample::Sample(){
 }
 
 void Sample::setup(){
-    x = 200;// ofGetWindowWidth()/2;
-    y = 200; // ofGetWindowHeight()/2;
+    x = ofGetWindowWidth()/2;
+    y = ofGetWindowHeight()/2;
     w = 50;
     h = 50;
     
     number = 1;
     
     color_wireframe.set(0);
-    
-    int samplePix[3];
 }
 
 
 void Sample::update(){
-    
-    
-    
-    
     
 }
 
@@ -41,7 +35,9 @@ void Sample::draw(){
 
 void Sample::sampling(ofPixels& frame) {
     
+    
     frame.crop(x, y, w, h);
+    
     
     int newW = w;
     int newH = h;
@@ -55,16 +51,8 @@ void Sample::sampling(ofPixels& frame) {
 //        
 //    }
     
-    frame.resize(1, 1);
-    
-    unsigned char* pixels = frame.getPixels();
+    color_sample = frame.getColor(25, 25);
     
     
-    r = frame[0];
-    g = frame[1];
-    b = frame[2];
-    color_sample.set(r, g, b);
-    
-     cout << "r=" << r << " g=" << g << " b=" << b << endl;
     
 }
