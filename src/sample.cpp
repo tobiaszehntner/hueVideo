@@ -29,15 +29,11 @@ void Sample::draw(){
     ofRect(x, y, w, h);
     ofDrawBitmapString(ofToString(number), x+5, y+15);
     
-    
-    
 }
 
 void Sample::sampling(ofPixels& frame) {
     
-    
     frame.crop(x, y, w, h);
-    
     
     int newW = w;
     int newH = h;
@@ -48,12 +44,8 @@ void Sample::sampling(ofPixels& frame) {
             newW = newW/2;
         }
         frame.resize(newW, newH);
-        
     }
-    cout << frame.getWidth() << endl;
     
     color_sample = frame.getColor(0, 0);
-    
-    
     
 }
