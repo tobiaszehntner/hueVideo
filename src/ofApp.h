@@ -21,7 +21,8 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
     
     ofVideoPlayer video;
-    ofImage videoFrame;
+    ofPixels pixels;
+    ofColor averageColor;
     
     Sample sample1;
 		

@@ -7,11 +7,11 @@
 Sample::Sample(){
 }
 
-void Sample::setup(){
-    x = ofGetWindowWidth()/2;
-    y = ofGetWindowHeight()/2;
-    w = 50;
-    h = 50;
+void Sample::setup(int sampleX, int sampleY, int sampleW, int sampleH){
+    x = sampleX;
+    y = sampleY;
+    w = sampleW;
+    h = sampleH;
     
     number = 1;
     
@@ -31,21 +31,29 @@ void Sample::draw(){
     
 }
 
-void Sample::sampling(ofPixels& frame) {
+void Sample::sampling(ofPixels frame) {
     
-    frame.crop(x, y, w, h);
+    int rSum = 0;
+    int gSum = 0;
+    int bSum = 0;
     
-    int newW = w;
-    int newH = h;
     
-    while(newH > 1) {
-        newH = newH/2;
-        if(newW > 1) {
-            newW = newW/2;
+    for(int i = x; i < (x+w); i++) {
+        
+        for(int j = y; j < (y+h); j++) {
+            
+            ofColor pixelColor = frame.getColor(i, j);
+            rSum += pixelColor.r;
+            gSum += pixelColor.g;
+            bSum += pixelColor.b;
         }
-        frame.resize(newW, newH);
     }
     
-    color_sample = frame.getColor(0, 0);
+    int samples = w * h;
+    
+    averageColor.r = rSum / samples;
+    averageColor.g = gSum / samples;
+    averageColor.b = bSum / samples;
+    
     
 }
