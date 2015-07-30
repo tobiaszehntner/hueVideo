@@ -25,5 +25,8 @@ class ofApp : public ofBaseApp{
     ofColor averageColor;
     
     Sample sample1;
+    
+    int videoPosX, videoPosY, videoPosW, videoPosH;
+    float ratio;
 		
 };
