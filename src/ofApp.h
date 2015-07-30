@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ofMain.h"
-#include "sample.h"
 
 class ofApp : public ofBaseApp{
 
@@ -20,12 +19,13 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     
+    ofColor sample(int x, int y, int w, int h, ofPixels frame);
+    
     ofVideoPlayer video;
     ofPixels pixels;
-    ofColor averageColor;
+    ofColor sampleColor;
     
-    Sample sample1;
-    
+    int x, y, w, h;
     int videoPosX, videoPosY, videoPosW, videoPosH;
     float ratio;
 		
