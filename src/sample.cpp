@@ -24,11 +24,7 @@ void Sample::update(){
 }
 
 void Sample::draw(){
-    
-    ofNoFill();
-    ofRect(x, y, w, h);
-    ofDrawBitmapString(ofToString(number), x+5, y+15);
-    
+        
 }
 
 void Sample::sampling(ofPixels frame) {
