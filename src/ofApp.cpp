@@ -29,20 +29,18 @@ void ofApp::setup(){
 void ofApp::update(){
     video.update();
     
-    if(mouseX >= videoPosX && mouseX <= (videoPosX+videoPosW-w/ratio)) {
-        x = (mouseX-videoPosX)*ratio;
-    }
-    if(mouseY >= videoPosY && mouseY <= videoPosY+videoPosH-h/ratio) {
-        y = (mouseY-videoPosY)*ratio;
-    }
+        if(mouseX >= videoPosX && mouseX <= videoPosX+videoPosW-w) {
+            x = mouseX;
+        }
+        if(mouseY >= videoPosY && mouseY <= videoPosY+videoPosH-h) {
+            y = mouseY;
+        }
     
     if(video.isFrameNew()) {
         
         sampleColor = sample(x, y, w, h, video.getPixelsRef());
         
     }
-    
-    
     
 }
 
@@ -52,19 +50,12 @@ void ofApp::draw(){
     ofSetColor(255);
     video.draw(videoPosX, videoPosY, videoPosW, videoPosH);
     
-    cout << "mouseX = " << mouseX << " x = " << x << " mouseY = " << mouseY << " y " << y << endl;
-    
     ofSetColor(ofColor::red);
     ofNoFill();
     
-    ofRect(
-           ((x/ratio)+videoPosX),
-           ((y/ratio)+videoPosY),
-           (w/ratio),
-           (h/ratio)
-           );
+    ofRect(x,y,w,h);
     
-    ofDrawBitmapString(ofToString("1"), ((x/ratio)+videoPosX)+5, ((y/ratio)+videoPosY)+15);
+    ofDrawBitmapString(ofToString("1"), x+5, y+15);
     
     ofSetColor(sampleColor);
     ofFill();    
@@ -74,12 +65,16 @@ void ofApp::draw(){
 
 ofColor ofApp::sample(int x, int y, int w, int h, ofPixels frame) {
     
+    x = (x-videoPosX)*ratio;
+    y = (y-videoPosY)*ratio;
+    w = w*ratio;
+    h = h*ratio;
+    
     ofColor averageColor;
     
     int rSum = 0;
     int gSum = 0;
     int bSum = 0;
-    
     
     for(int i = x; i < (x+w); i++) {
         
@@ -91,14 +86,16 @@ ofColor ofApp::sample(int x, int y, int w, int h, ofPixels frame) {
             bSum += pixelColor.b;
         }
     }
-    
+
     int samples = w * h;
     
     averageColor.r = rSum / samples;
     averageColor.g = gSum / samples;
     averageColor.b = bSum / samples;
     
+    
     return averageColor;
+    
 }
 
 //--------------------------------------------------------------
