@@ -18,7 +18,7 @@ void ofApp::setup(){
     
     ratio = video.getWidth()/videoPosW; // 1.6
     
-    numSamples = 9;
+    numSamples = 5;
     
     areaCenter.x = videoPosX+videoPosW/2;
     areaCenter.y = videoPosY+videoPosH/2;
@@ -42,8 +42,8 @@ void ofApp::update(){
     for (int i = 0; i < numSamples; i++) {
         
         ofVec2f loc(
-                    (areaCenter.x - (areaW/2) + ( ((areaW) / (numSamples)) * (i+0.5) ) ) - (w/2),
-                    (areaCenter.y)-(h/2)
+                    (areaCenter.x - (areaW/2) + ( ((areaW-w) / (numSamples-1)) * (i) ) ),
+                    (areaCenter.y - (areaH/2) + ( ((areaH-h) / (numSamples-1)) * (i) ) )
                     );
         samplePos.push_back(loc);
         
@@ -134,15 +134,18 @@ void ofApp::keyPressed(int key){
         if(areaCenter.y < (videoPosY + videoPosH - (h/2))) {
             areaCenter.y += 5;
         }
-    } else if (key == OF_KEY_UP){
+    }
+    if (key == OF_KEY_UP){
         if(areaCenter.y > (videoPosY + (h/2))) {
             areaCenter.y -= 5;;
         }
-    } else if (key == OF_KEY_RIGHT){
+    }
+    if (key == OF_KEY_RIGHT){
         if(areaCenter.x < (videoPosX + videoPosW - (w/2))) {
             areaCenter.x += 5;;
         }
-    } else if (key == OF_KEY_LEFT){
+    }
+    if (key == OF_KEY_LEFT){
         if(areaCenter.x > (videoPosX + (w/2))) {
             areaCenter.x -= 5;;
         }
