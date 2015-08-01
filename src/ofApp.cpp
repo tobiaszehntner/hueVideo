@@ -64,7 +64,7 @@ void ofApp::update(){
         
     }
     
-    
+    cout << areaW << endl;
     
 }
 
@@ -150,7 +150,26 @@ void ofApp::keyPressed(int key){
             areaCenter.x -= 5;;
         }
     }
-    
+    if (key == 'n'){
+        if(areaW > w) {
+            areaW -= 5;;
+        }
+    }
+    if (key == 'm'){
+        if(areaW < videoPosW) {
+            areaW += 5;;
+        }
+    }
+    if (key == 'c'){
+        if(areaH > h) {
+            areaH -= 5;;
+        }
+    }
+    if (key == 'v'){
+        if(areaH < videoPosH) {
+            areaH += 5;;
+        }
+    }
 }
 
 //--------------------------------------------------------------
