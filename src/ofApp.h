@@ -25,8 +25,13 @@ class ofApp : public ofBaseApp{
     ofPixels pixels;
     ofColor sampleColor;
     
-    int x, y, w, h;
+    int numSamples;
+    unsigned int x, y, w, h;
     int videoPosX, videoPosY, videoPosW, videoPosH;
     float ratio;
+    
+    ofVec2f areaCenter;
+    int areaW, areaH;
+    vector<ofVec2f> samplePos;
 		
 };

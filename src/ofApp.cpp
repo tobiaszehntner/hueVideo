@@ -18,6 +18,13 @@ void ofApp::setup(){
     
     ratio = video.getWidth()/videoPosW; // 1.6
     
+    numSamples = 9;
+    
+    areaCenter.x = videoPosX+videoPosW/2;
+    areaCenter.y = videoPosY+videoPosH/2;
+    areaW = videoPosW;
+    areaH = videoPosH;
+    
     x = 0;
     y = 0;
     w = 50;
@@ -27,6 +34,21 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
+
+    
+    samplePos.clear();
+    
+    
+    for (int i = 0; i < numSamples; i++) {
+        
+        ofVec2f loc(
+                    (areaCenter.x - (areaW/2) + ( ((areaW) / (numSamples)) * (i+0.5) ) ) - (w/2),
+                    (areaCenter.y)-(h/2)
+                    );
+        samplePos.push_back(loc);
+        
+    }
+    
     video.update();
     
         if(mouseX >= videoPosX && mouseX <= videoPosX+videoPosW-w) {
@@ -42,6 +64,8 @@ void ofApp::update(){
         
     }
     
+    
+    
 }
 
 //--------------------------------------------------------------
@@ -50,9 +74,14 @@ void ofApp::draw(){
     ofSetColor(255);
     video.draw(videoPosX, videoPosY, videoPosW, videoPosH);
     
+    for (int i = 0; i < numSamples; i++) {
+        ofSetColor(ofColor::green);
+        ofNoFill();
+        ofRect(samplePos[i].x,samplePos[i].y,w,h);
+    }
+    
     ofSetColor(ofColor::red);
     ofNoFill();
-    
     ofRect(x,y,w,h);
     
     ofDrawBitmapString(ofToString("1"), x+5, y+15);
@@ -100,7 +129,25 @@ ofColor ofApp::sample(int x, int y, int w, int h, ofPixels frame) {
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-
+    
+    if (key == OF_KEY_DOWN){
+        if(areaCenter.y < (videoPosY + videoPosH - (h/2))) {
+            areaCenter.y += 5;
+        }
+    } else if (key == OF_KEY_UP){
+        if(areaCenter.y > (videoPosY + (h/2))) {
+            areaCenter.y -= 5;;
+        }
+    } else if (key == OF_KEY_RIGHT){
+        if(areaCenter.x < (videoPosX + videoPosW - (w/2))) {
+            areaCenter.x += 5;;
+        }
+    } else if (key == OF_KEY_LEFT){
+        if(areaCenter.x > (videoPosX + (w/2))) {
+            areaCenter.x -= 5;;
+        }
+    }
+    
 }
 
 //--------------------------------------------------------------
