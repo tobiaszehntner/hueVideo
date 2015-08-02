@@ -34,8 +34,5 @@ class ofApp : public ofBaseApp{
     
     ofVec2f areaCenter;
     float areaW, areaH;
-    
-    bool isFlippedX;
-    bool isFlippedY;
 		
 };
