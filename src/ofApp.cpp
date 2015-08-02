@@ -4,8 +4,12 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     ofSetWindowTitle("hueVideo");
-    
     ofBackground(255);
+    
+    x = 0;
+    y = 0;
+    w = 50;
+    h = 50;
     
     video.loadMovie("video.mov");
     video.setVolume(0);
@@ -18,20 +22,15 @@ void ofApp::setup(){
     
     ratio = video.getWidth()/videoPosW; // 1.6
     
-    numSamples = 5;
+    numSamples = 10;
     
     areaCenter.x = videoPosX+videoPosW/2;
     areaCenter.y = videoPosY+videoPosH/2;
     areaW = videoPosW;
-    areaH = videoPosH;
+    areaH = h;
     
     isFlippedX = false;
     isFlippedY = false;
-    
-    x = 0;
-    y = 0;
-    w = 50;
-    h = 50;
 
 }
 
@@ -45,16 +44,25 @@ void ofApp::update(){
     
     for (int i = 0; i < numSamples; i++) {
         
-        if(isFlippedX) {
-            sampleX = areaCenter.x + (areaW/2-w) - ( ((areaW-w) / (numSamples-1)) * i);
+        if(numSamples > 1) {
+            if(isFlippedX) {
+                sampleX = areaCenter.x + (areaW/2) - ( ((areaW-w) / (numSamples-1)) * i) -w;
+                cout << sampleX << endl;
+            } else {
+                sampleX = areaCenter.x - (areaW/2) + ( ((areaW-w) / (numSamples-1)) * i);
+            }
         } else {
-            sampleX = areaCenter.x - (areaW/2) + ( ((areaW-w) / (numSamples-1)) * i);
+            sampleX = areaCenter.x - w/2;
         }
         
-        if(isFlippedY) {
-            sampleY = areaCenter.y + (areaH/2-h) - ( ((areaH-h) / (numSamples-1)) * i);
+        if(numSamples > 1) {
+            if(isFlippedY) {
+                sampleY = areaCenter.y + (areaH/2) - ( ((areaH-h) / (numSamples-1)) * i) -h;
+            } else {
+                sampleY = areaCenter.y - (areaH/2) + ( ((areaH-h) / (numSamples-1)) * i);
+            }
         } else {
-            sampleY = areaCenter.y - (areaH/2) + ( ((areaH-h) / (numSamples-1)) * i);
+            sampleY = areaCenter.y - h/2;
         }
 
         ofVec2f loc(sampleX, sampleY);
@@ -78,8 +86,6 @@ void ofApp::update(){
         
     }
     
-    cout << areaW << endl;
-    
 }
 
 //--------------------------------------------------------------
@@ -92,7 +98,7 @@ void ofApp::draw(){
         ofSetColor(ofColor::green);
         ofNoFill();
         ofRect(samplePos[i].x,samplePos[i].y,w,h);
-        ofDrawBitmapString(ofToString(i), samplePos[i].x+5, samplePos[i].y+15);
+        ofDrawBitmapString(ofToString(i+1), samplePos[i].x+5, samplePos[i].y+15);
     }
     
     ofSetColor(ofColor::red);
@@ -106,10 +112,11 @@ void ofApp::draw(){
     ofRect(10, 10, 50, 50);
     
     ofSetColor(0);
-    ofDrawBitmapString("c-v/n-m    : X/Y Distr = " + ofToString(areaW-w) + "/" + ofToString(areaH-h) + "\n"
-                       "Arrow Keys : Center    = " + ofToString(areaCenter.x) + "/" + ofToString(areaCenter.y)
+    ofDrawBitmapString("X/Y Distr [c-v/n-m] = " + ofToString(areaW-w) + "/" + ofToString(areaH-h) + "\n"
+                       "Center [arrowKeys]  = " + ofToString(areaCenter.x) + "/" + ofToString(areaCenter.y)
                        , 10, 80);
-    ofDrawBitmapString("f-g : Flip X/Y  = " + ofToString(isFlippedX) + "/" + ofToString(isFlippedY)
+    ofDrawBitmapString("Flip X/Y [f-g] = " + ofToString(isFlippedX) + "/" + ofToString(isFlippedY) + "\n"
+                       "Samples [k-l]  = " + ofToString(numSamples)
                        , 400, 80);
     
 }
@@ -206,6 +213,17 @@ void ofApp::keyPressed(int key){
             isFlippedY = false;
         } else {
             isFlippedY = true;
+        }
+    }
+    
+    if (key == 'k'){
+        if(numSamples > 1) {
+            numSamples--;
+        }
+    }
+    if (key == 'l'){
+        if(numSamples < 10) {
+            numSamples++;
         }
     }
 }
