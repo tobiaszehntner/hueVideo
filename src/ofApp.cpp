@@ -6,8 +6,6 @@ void ofApp::setup(){
     ofSetWindowTitle("hueVideo");
     ofBackground(255);
     
-    x = 0;
-    y = 0;
     w = 50;
     h = 50;
     
@@ -39,15 +37,15 @@ void ofApp::update(){
 
     
     samplePos.clear();
-    int sampleX;
-    int sampleY;
     
     for (int i = 0; i < numSamples; i++) {
+    
+        int sampleX;
+        int sampleY;
         
         if(numSamples > 1) {
             if(isFlippedX) {
                 sampleX = areaCenter.x + (areaW/2) - ( ((areaW-w) / (numSamples-1)) * i) -w;
-                cout << sampleX << endl;
             } else {
                 sampleX = areaCenter.x - (areaW/2) + ( ((areaW-w) / (numSamples-1)) * i);
             }
@@ -73,16 +71,17 @@ void ofApp::update(){
     
     video.update();
     
-        if(mouseX >= videoPosX && mouseX <= videoPosX+videoPosW-w) {
-            x = mouseX;
-        }
-        if(mouseY >= videoPosY && mouseY <= videoPosY+videoPosH-h) {
-            y = mouseY;
-        }
-    
     if(video.isFrameNew()) {
         
-        sampleColor = sample(x, y, w, h, video.getPixelsRef());
+        sampleColor.clear();
+        
+        for (int i = 0; i < numSamples; i++) {
+            
+            ofColor color = sample(samplePos[i].x,samplePos[i].y,w,h, video.getPixelsRef());
+        
+            sampleColor.push_back(color);
+        
+        }
         
     }
     
@@ -101,15 +100,13 @@ void ofApp::draw(){
         ofDrawBitmapString(ofToString(i+1), samplePos[i].x+5, samplePos[i].y+15);
     }
     
-    ofSetColor(ofColor::red);
-    ofNoFill();
-    ofRect(x,y,w,h);
-    
-    ofDrawBitmapString(ofToString("1"), x+5, y+15);
-    
-    ofSetColor(sampleColor);
-    ofFill();    
-    ofRect(10, 10, 50, 50);
+    for (int i = 0; i < numSamples; i++) {
+        ofSetColor(sampleColor[i]);
+        ofFill();    
+        ofRect(10 + (i*60), 10, 50, 50);
+        ofSetColor(255);
+        ofDrawBitmapString(ofToString(i+1), 15 + (i*60), 25);
+    }
     
     ofSetColor(0);
     ofDrawBitmapString("X/Y Distr [c-v/n-m] = " + ofToString(areaW-w) + "/" + ofToString(areaH-h) + "\n"
@@ -117,7 +114,7 @@ void ofApp::draw(){
                        , 10, 80);
     ofDrawBitmapString("Flip X/Y [f-g] = " + ofToString(isFlippedX) + "/" + ofToString(isFlippedY) + "\n"
                        "Samples [k-l]  = " + ofToString(numSamples)
-                       , 400, 80);
+                       , 300, 80);
     
 }
 

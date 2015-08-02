@@ -23,10 +23,10 @@ class ofApp : public ofBaseApp{
     
     ofVideoPlayer video;
     ofPixels pixels;
-    ofColor sampleColor;
+    vector<ofColor> sampleColor;
     
     int numSamples;
-    unsigned int x, y, w, h;
+    unsigned int w, h;
     int videoPosX, videoPosY, videoPosW, videoPosH;
     float ratio;
     
