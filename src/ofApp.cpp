@@ -105,6 +105,13 @@ void ofApp::draw(){
     ofFill();    
     ofRect(10, 10, 50, 50);
     
+    ofSetColor(0);
+    ofDrawBitmapString("c-v/n-m    : X/Y Distr = " + ofToString(areaW-w) + "/" + ofToString(areaH-h) + "\n"
+                       "Arrow Keys : Center    = " + ofToString(areaCenter.x) + "/" + ofToString(areaCenter.y)
+                       , 10, 80);
+    ofDrawBitmapString("f-g : Flip X/Y  = " + ofToString(isFlippedX) + "/" + ofToString(isFlippedY)
+                       , 400, 80);
+    
 }
 
 ofColor ofApp::sample(int x, int y, int w, int h, ofPixels frame) {
