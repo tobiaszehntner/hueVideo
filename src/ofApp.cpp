@@ -6,8 +6,8 @@ void ofApp::setup(){
     ofSetWindowTitle("hueVideo");
     ofBackground(255);
     
-    w = 50;
-    h = 50;
+    sampleW = 50;
+    sampleH = 50;
     
     video.loadMovie("video.mov");
     video.setVolume(0);
@@ -20,12 +20,12 @@ void ofApp::setup(){
     
     ratio = video.getWidth()/videoPosW; // 1.6
     
-    numSamples = 10;
+    sampleNum = 10;
     
     areaCenter.x = videoPosX+videoPosW/2;
     areaCenter.y = videoPosY+videoPosH/2;
     areaW = videoPosW;
-    areaH = h;
+    areaH = sampleH;
     
     isFlippedX = false;
     isFlippedY = false;
@@ -38,29 +38,29 @@ void ofApp::update(){
     
     samplePos.clear();
     
-    for (int i = 0; i < numSamples; i++) {
+    for (int i = 0; i < sampleNum; i++) {
     
         int sampleX;
         int sampleY;
         
-        if(numSamples > 1) {
+        if(sampleNum > 1) {
             if(isFlippedX) {
-                sampleX = areaCenter.x + (areaW/2) - ( ((areaW-w) / (numSamples-1)) * i) -w;
+                sampleX = areaCenter.x + (areaW/2) - ( ((areaW-sampleW) / (sampleNum-1)) * i) -sampleW;
             } else {
-                sampleX = areaCenter.x - (areaW/2) + ( ((areaW-w) / (numSamples-1)) * i);
+                sampleX = areaCenter.x - (areaW/2) + ( ((areaW-sampleW) / (sampleNum-1)) * i);
             }
         } else {
-            sampleX = areaCenter.x - w/2;
+            sampleX = areaCenter.x - sampleW/2;
         }
         
-        if(numSamples > 1) {
+        if(sampleNum > 1) {
             if(isFlippedY) {
-                sampleY = areaCenter.y + (areaH/2) - ( ((areaH-h) / (numSamples-1)) * i) -h;
+                sampleY = areaCenter.y + (areaH/2) - ( ((areaH-sampleH) / (sampleNum-1)) * i) -sampleH;
             } else {
-                sampleY = areaCenter.y - (areaH/2) + ( ((areaH-h) / (numSamples-1)) * i);
+                sampleY = areaCenter.y - (areaH/2) + ( ((areaH-sampleH) / (sampleNum-1)) * i);
             }
         } else {
-            sampleY = areaCenter.y - h/2;
+            sampleY = areaCenter.y - sampleH/2;
         }
 
         ofVec2f loc(sampleX, sampleY);
@@ -75,9 +75,9 @@ void ofApp::update(){
         
         sampleColor.clear();
         
-        for (int i = 0; i < numSamples; i++) {
+        for (int i = 0; i < sampleNum; i++) {
             
-            ofColor color = sample(samplePos[i].x,samplePos[i].y,w,h, video.getPixelsRef());
+            ofColor color = sample(samplePos[i].x,samplePos[i].y,sampleW,sampleH, video.getPixelsRef());
         
             sampleColor.push_back(color);
         
@@ -93,14 +93,14 @@ void ofApp::draw(){
     ofSetColor(255);
     video.draw(videoPosX, videoPosY, videoPosW, videoPosH);
     
-    for (int i = 0; i < numSamples; i++) {
+    for (int i = 0; i < sampleNum; i++) {
         ofSetColor(ofColor::green);
         ofNoFill();
-        ofRect(samplePos[i].x,samplePos[i].y,w,h);
+        ofRect(samplePos[i].x,samplePos[i].y,sampleW,sampleH);
         ofDrawBitmapString(ofToString(i+1), samplePos[i].x+5, samplePos[i].y+15);
     }
     
-    for (int i = 0; i < numSamples; i++) {
+    for (int i = 0; i < sampleNum; i++) {
         ofSetColor(sampleColor[i]);
         ofFill();    
         ofRect(10 + (i*60), 10, 50, 50);
@@ -109,11 +109,11 @@ void ofApp::draw(){
     }
     
     ofSetColor(0);
-    ofDrawBitmapString("X/Y Distr [c-v/n-m] = " + ofToString(areaW-w) + "/" + ofToString(areaH-h) + "\n"
+    ofDrawBitmapString("X/Y Distr [c-v/n-m] = " + ofToString(areaW-sampleW) + "/" + ofToString(areaH-sampleH) + "\n"
                        "Center [arrowKeys]  = " + ofToString(areaCenter.x) + "/" + ofToString(areaCenter.y)
                        , 10, 80);
     ofDrawBitmapString("Flip X/Y [f-g] = " + ofToString(isFlippedX) + "/" + ofToString(isFlippedY) + "\n"
-                       "Samples [k-l]  = " + ofToString(numSamples)
+                       "Samples [k-l]  = " + ofToString(sampleNum)
                        , 300, 80);
     
 }
@@ -157,28 +157,28 @@ ofColor ofApp::sample(int x, int y, int w, int h, ofPixels frame) {
 void ofApp::keyPressed(int key){
     
     if (key == OF_KEY_DOWN){
-        if(areaCenter.y < (videoPosY + videoPosH - (h/2))) {
+        if(areaCenter.y < (videoPosY + videoPosH - (sampleH/2))) {
             areaCenter.y += 5;
         }
     }
     if (key == OF_KEY_UP){
-        if(areaCenter.y > (videoPosY + (h/2))) {
+        if(areaCenter.y > (videoPosY + (sampleH/2))) {
             areaCenter.y -= 5;;
         }
     }
     if (key == OF_KEY_RIGHT){
-        if(areaCenter.x < (videoPosX + videoPosW - (w/2))) {
+        if(areaCenter.x < (videoPosX + videoPosW - (sampleW/2))) {
             areaCenter.x += 5;;
         }
     }
     if (key == OF_KEY_LEFT){
-        if(areaCenter.x > (videoPosX + (w/2))) {
+        if(areaCenter.x > (videoPosX + (sampleW/2))) {
             areaCenter.x -= 5;;
         }
     }
     
     if (key == 'n'){
-        if(areaW > w) {
+        if(areaW > sampleW) {
             areaW -= 5;;
         }
     }
@@ -188,7 +188,7 @@ void ofApp::keyPressed(int key){
         }
     }
     if (key == 'c'){
-        if(areaH > h) {
+        if(areaH > sampleH) {
             areaH -= 5;;
         }
     }
@@ -214,13 +214,13 @@ void ofApp::keyPressed(int key){
     }
     
     if (key == 'k'){
-        if(numSamples > 1) {
-            numSamples--;
+        if(sampleNum > 1) {
+            sampleNum--;
         }
     }
     if (key == 'l'){
-        if(numSamples < 10) {
-            numSamples++;
+        if(sampleNum < 10) {
+            sampleNum++;
         }
     }
 }

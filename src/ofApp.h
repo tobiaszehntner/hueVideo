@@ -22,17 +22,19 @@ class ofApp : public ofBaseApp{
     ofColor sample(int x, int y, int w, int h, ofPixels frame);
     
     ofVideoPlayer video;
-    ofPixels pixels;
-    vector<ofColor> sampleColor;
-    
-    int numSamples;
-    unsigned int w, h;
     int videoPosX, videoPosY, videoPosW, videoPosH;
+    ofPixels pixels;
     float ratio;
+    
+    int sampleNum;
+    int sampleSize;
+    vector<ofVec2f> samplePos;
+    vector<ofColor> sampleColor;
+    unsigned int sampleW, sampleH;
     
     ofVec2f areaCenter;
     float areaW, areaH;
-    vector<ofVec2f> samplePos;
+    
     bool isFlippedX;
     bool isFlippedY;
 		
