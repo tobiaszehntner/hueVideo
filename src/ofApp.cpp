@@ -25,6 +25,9 @@ void ofApp::setup(){
     areaW = videoPosW;
     areaH = videoPosH;
     
+    isFlippedX = false;
+    isFlippedY = false;
+    
     x = 0;
     y = 0;
     w = 50;
@@ -37,14 +40,25 @@ void ofApp::update(){
 
     
     samplePos.clear();
-    
+    int sampleX;
+    int sampleY;
     
     for (int i = 0; i < numSamples; i++) {
         
-        ofVec2f loc(
-                    (areaCenter.x - (areaW/2) + ( ((areaW-w) / (numSamples-1)) * (i) ) ),
-                    (areaCenter.y - (areaH/2) + ( ((areaH-h) / (numSamples-1)) * (i) ) )
-                    );
+        if(isFlippedX) {
+            sampleX = areaCenter.x + (areaW/2-w) - ( ((areaW-w) / (numSamples-1)) * i);
+        } else {
+            sampleX = areaCenter.x - (areaW/2) + ( ((areaW-w) / (numSamples-1)) * i);
+        }
+        
+        if(isFlippedY) {
+            sampleY = areaCenter.y + (areaH/2-h) - ( ((areaH-h) / (numSamples-1)) * i);
+        } else {
+            sampleY = areaCenter.y - (areaH/2) + ( ((areaH-h) / (numSamples-1)) * i);
+        }
+
+        ofVec2f loc(sampleX, sampleY);
+
         samplePos.push_back(loc);
         
     }
@@ -78,6 +92,7 @@ void ofApp::draw(){
         ofSetColor(ofColor::green);
         ofNoFill();
         ofRect(samplePos[i].x,samplePos[i].y,w,h);
+        ofDrawBitmapString(ofToString(i), samplePos[i].x+5, samplePos[i].y+15);
     }
     
     ofSetColor(ofColor::red);
@@ -150,6 +165,7 @@ void ofApp::keyPressed(int key){
             areaCenter.x -= 5;;
         }
     }
+    
     if (key == 'n'){
         if(areaW > w) {
             areaW -= 5;;
@@ -168,6 +184,21 @@ void ofApp::keyPressed(int key){
     if (key == 'v'){
         if(areaH < videoPosH) {
             areaH += 5;;
+        }
+    }
+    
+    if (key == 'f'){
+        if(isFlippedX) {
+            isFlippedX = false;
+        } else {
+            isFlippedX = true;
+        }
+    }
+    if (key == 'g'){
+        if(isFlippedY) {
+            isFlippedY = false;
+        } else {
+            isFlippedY = true;
         }
     }
 }

@@ -33,5 +33,7 @@ class ofApp : public ofBaseApp{
     ofVec2f areaCenter;
     int areaW, areaH;
     vector<ofVec2f> samplePos;
+    bool isFlippedX;
+    bool isFlippedY;
 		
 };
