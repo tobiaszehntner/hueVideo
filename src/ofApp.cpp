@@ -4,6 +4,7 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     ofSetWindowTitle("hueVideo");
+
     ofBackground(255);
     
     video.loadMovie("video.mov");
@@ -17,8 +18,6 @@ void ofApp::setup(){
     
     ratio = video.getWidth()/videoPosW; // 1.6
     
-    frameCount = 0;
-    
     sampleNum = 9;
     sampleSize = 50; // pixels
     sampleW = sampleSize;
@@ -30,7 +29,6 @@ void ofApp::setup(){
     areaH = sampleH;
     
     smoothing = 0.8; // 0-1, 0 = no smoothing
-
 }
 
 //--------------------------------------------------------------
@@ -88,6 +86,7 @@ void ofApp::update(){
             }
         }
     }
+
 }
 
 //--------------------------------------------------------------
@@ -95,7 +94,7 @@ void ofApp::draw(){
     
     ofSetColor(255);
     video.draw(videoPosX, videoPosY, videoPosW, videoPosH);
-    
+
     for (int i = 0; i < sampleNum; i++) {
         ofSetColor(ofColor::green);
         ofNoFill();
@@ -157,7 +156,7 @@ ofColor ofApp::sample(int x, int y, int w, int h, ofPixels frame) {
     averageColor.b = bSum / samples;
     
     return averageColor;
-    
+
 }
 
 //--------------------------------------------------------------
