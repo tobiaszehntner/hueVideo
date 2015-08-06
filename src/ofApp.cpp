@@ -23,12 +23,13 @@ void ofApp::setup(){
     sampleSize = 50; // pixels
     sampleW = sampleSize;
     sampleH = sampleSize;
-    sampleRate = 5;
     
     areaCenter.x = videoPosX+videoPosW/2;
     areaCenter.y = videoPosY+videoPosH/2;
     areaW = videoPosW;
     areaH = sampleH;
+    
+    smoothing = 0.8; // 0-1, 0 = no smoothing
 
 }
 
@@ -67,41 +68,27 @@ void ofApp::update(){
     
     if(video.isFrameNew()) {
 
-            sampleColor.clear();
+        sampleColor.clear();
+
+    // Get each sample per frame
+        for (int i = 0; i < sampleNum; i++) {
+            ofColor color = sample(samplePos[i].x,samplePos[i].y,sampleW,sampleH, video.getPixelsRef());
+            sampleColor.push_back(color);
+        }
+
         
-        // Get each sample per frame
+        if(averageColor.size() == 0) {
             for (int i = 0; i < sampleNum; i++) {
-                ofColor color = sample(samplePos[i].x,samplePos[i].y,sampleW,sampleH, video.getPixelsRef());
-                sampleColor.push_back(color);
+                averageColor.push_back(sampleColor[i]);
             }
-        
-        
-        
-        // add the RGB value of each sample to buffer
-        if(frameCount < sampleRate) {
+        } else {
             for (int i = 0; i < sampleNum; i++) {
-                ofVec3f color(sampleColor[i].r, sampleColor[i].g, sampleColor[i].b);
-                
-                buffer[i] += color;
+                averageColor[i].r = smoothing * averageColor[i].r + (1-smoothing) * sampleColor[i].r;
+                averageColor[i].g = smoothing * averageColor[i].g + (1-smoothing) * sampleColor[i].g;
+                averageColor[i].b = smoothing * averageColor[i].b + (1-smoothing) * sampleColor[i].b;
             }
-            
-            frameCount++;
-        
-        } else {    // if enough samples are collected, put average of each frame into averageColor
-           
-            averageColor.clear();
-            
-            for (int i = 0; i < sampleNum; i++) {
-                averageColor[i].r = buffer[i].x / sampleRate;
-                averageColor[i].g = buffer[i].y / sampleRate;
-                averageColor[i].b = buffer[i].z / sampleRate;
-            }
-            
-            frameCount = 0;
-            buffer.clear();
         }
     }
-    
 }
 
 //--------------------------------------------------------------
@@ -118,7 +105,7 @@ void ofApp::draw(){
     }
     
     for (int i = 0; i < sampleNum; i++) {
-        ofSetColor(sampleColor[i]);
+        ofSetColor(averageColor[i]);
         ofFill();    
         ofRect(10 + (i*60), 10, 50, 50);
         ofSetColor(255);
@@ -133,7 +120,7 @@ void ofApp::draw(){
     ofDrawBitmapString("Samples [k-l]     = " + ofToString(sampleNum) + "\n" +
                        "Sample size [a-s] = " + ofToString(sampleSize)
                        , 300, 80);
-    ofDrawBitmapString("Sample rate [q-w] = Every " + ofToString(sampleRate) + " frames" + "\n" +
+    ofDrawBitmapString("Smoothing [q-w] = " + ofToString(smoothing, 2) + "\n" +
                        "Sample size [a-s] = " + ofToString(sampleSize)
                        , 500, 80);
     
@@ -246,13 +233,15 @@ void ofApp::keyPressed(int key){
     }
     
     if (key == 'q'){
-        if(frameCount < 500) {
-            frameCount += 1;
+        if(smoothing < 0.98) {
+            smoothing += 0.01;
         }
     }
     if (key == 'w'){
-        if(frameCount > 1) {
-            frameCount -= 1;
+        if(smoothing > 0.02) {
+            smoothing -= 0.01;
+        } else {
+            smoothing = 0;
         }
     }
 }

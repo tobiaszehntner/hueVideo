@@ -30,10 +30,9 @@ class ofApp : public ofBaseApp{
     
     int sampleNum;
     int sampleSize;
-    int sampleRate;
     unsigned int sampleW, sampleH;
     
-    vector<ofVec3f> buffer;
+    float smoothing;
     vector<ofVec2f> samplePos;
     vector<ofColor> sampleColor;
     vector<ofColor> averageColor;
