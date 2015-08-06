@@ -24,13 +24,19 @@ class ofApp : public ofBaseApp{
     ofVideoPlayer video;
     int videoPosX, videoPosY, videoPosW, videoPosH;
     ofPixels pixels;
+    
     float ratio;
+    int frameCount;
     
     int sampleNum;
     int sampleSize;
+    int sampleRate;
+    unsigned int sampleW, sampleH;
+    
+    vector<ofVec3f> buffer;
     vector<ofVec2f> samplePos;
     vector<ofColor> sampleColor;
-    unsigned int sampleW, sampleH;
+    vector<ofColor> averageColor;
     
     ofVec2f areaCenter;
     float areaW, areaH;

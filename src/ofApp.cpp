@@ -17,10 +17,13 @@ void ofApp::setup(){
     
     ratio = video.getWidth()/videoPosW; // 1.6
     
-    sampleNum = 10;
-    sampleSize = 50;
+    frameCount = 0;
+    
+    sampleNum = 9;
+    sampleSize = 50; // pixels
     sampleW = sampleSize;
     sampleH = sampleSize;
+    sampleRate = 5;
     
     areaCenter.x = videoPosX+videoPosW/2;
     areaCenter.y = videoPosY+videoPosH/2;
@@ -63,17 +66,40 @@ void ofApp::update(){
     video.update();
     
     if(video.isFrameNew()) {
+
+            sampleColor.clear();
         
-        sampleColor.clear();
+        // Get each sample per frame
+            for (int i = 0; i < sampleNum; i++) {
+                ofColor color = sample(samplePos[i].x,samplePos[i].y,sampleW,sampleH, video.getPixelsRef());
+                sampleColor.push_back(color);
+            }
         
-        for (int i = 0; i < sampleNum; i++) {
+        
+        
+        // add the RGB value of each sample to buffer
+        if(frameCount < sampleRate) {
+            for (int i = 0; i < sampleNum; i++) {
+                ofVec3f color(sampleColor[i].r, sampleColor[i].g, sampleColor[i].b);
+                
+                buffer[i] += color;
+            }
             
-            ofColor color = sample(samplePos[i].x,samplePos[i].y,sampleW,sampleH, video.getPixelsRef());
+            frameCount++;
         
-            sampleColor.push_back(color);
-        
+        } else {    // if enough samples are collected, put average of each frame into averageColor
+           
+            averageColor.clear();
+            
+            for (int i = 0; i < sampleNum; i++) {
+                averageColor[i].r = buffer[i].x / sampleRate;
+                averageColor[i].g = buffer[i].y / sampleRate;
+                averageColor[i].b = buffer[i].z / sampleRate;
+            }
+            
+            frameCount = 0;
+            buffer.clear();
         }
-        
     }
     
 }
@@ -107,9 +133,13 @@ void ofApp::draw(){
     ofDrawBitmapString("Samples [k-l]     = " + ofToString(sampleNum) + "\n" +
                        "Sample size [a-s] = " + ofToString(sampleSize)
                        , 300, 80);
+    ofDrawBitmapString("Sample rate [q-w] = Every " + ofToString(sampleRate) + " frames" + "\n" +
+                       "Sample size [a-s] = " + ofToString(sampleSize)
+                       , 500, 80);
     
 }
 
+//--------------------------------------------------------------
 ofColor ofApp::sample(int x, int y, int w, int h, ofPixels frame) {
     
     x = (x-videoPosX)*ratio;
@@ -212,6 +242,17 @@ void ofApp::keyPressed(int key){
     if (key == 's'){
         if(sampleNum < 500) {
             sampleSize += 10;
+        }
+    }
+    
+    if (key == 'q'){
+        if(frameCount < 500) {
+            frameCount += 1;
+        }
+    }
+    if (key == 'w'){
+        if(frameCount > 1) {
+            frameCount -= 1;
         }
     }
 }
