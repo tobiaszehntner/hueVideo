@@ -70,7 +70,6 @@ void ofApp::update(){
 
         sampleColor.clear();
 
-    // Get each sample per frame
         for (int i = 0; i < sampleNum; i++) {
             ofColor color = sample(samplePos[i].x,samplePos[i].y,sampleW,sampleH, video.getPixelsRef());
             sampleColor.push_back(color);
@@ -156,7 +155,6 @@ ofColor ofApp::sample(int x, int y, int w, int h, ofPixels frame) {
     averageColor.r = rSum / samples;
     averageColor.g = gSum / samples;
     averageColor.b = bSum / samples;
-    
     
     return averageColor;
     

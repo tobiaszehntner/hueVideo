@@ -19,19 +19,13 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     
-    ofColor sample(int x, int y, int w, int h, ofPixels frame);
-    
     ofVideoPlayer video;
     int videoPosX, videoPosY, videoPosW, videoPosH;
-    ofPixels pixels;
-    
     float ratio;
-    int frameCount;
     
     int sampleNum;
     int sampleSize;
     unsigned int sampleW, sampleH;
-    
     float smoothing;
     vector<ofVec2f> samplePos;
     vector<ofColor> sampleColor;
@@ -39,5 +33,7 @@ class ofApp : public ofBaseApp{
     
     ofVec2f areaCenter;
     float areaW, areaH;
+    
+    ofColor sample(int x, int y, int w, int h, ofPixels frame);
 		
 };
