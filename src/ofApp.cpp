@@ -36,16 +36,9 @@ void ofApp::setup(){
     // Hue
     hueBridgeIP = "192.168.100.100";
     hueUser = "tobiaszehntner";
-    hueGetObject = "lights"; // "", "lights", "groups", "config"
-    hueLightNum = "1";
-    hueGroupNum = "2";
-    hueTransitionTime = 0; // 10 = 1sec, 600 = 1min
     
-    // HTTP Setup
-    getUrl       = "http://" + hueBridgeIP + "/api/" + hueUser + "/" + hueGetObject;
-    putUrl = "http://" + hueBridgeIP + "/api/" + hueUser + "/lights/" + hueLightNum + "/state";
-    
-    
+    hueGet(""); // Print Hue setup to output (can be "", "lights", "groups", "config")
+    hueSetup(2); // Set general settings of Hue bulbs for groupNum
 }
 
 //--------------------------------------------------------------
@@ -102,6 +95,10 @@ void ofApp::update(){
                 averageColor[i].b = smoothing * averageColor[i].b + (1-smoothing) * sampleColor[i].b;
             }
         }
+    }
+    
+    for (int i = 0; i < sampleNum; i++) {
+        huePutColor(i, averageColor[i], 0);
     }
 
 }
@@ -177,8 +174,9 @@ ofColor ofApp::sample(int x, int y, int w, int h, ofPixels frame) {
 }
 
 //--------------------------------------------------------------
-void ofApp::hueGetRequest() {
+void ofApp::hueGet(string hueGetObject) { // can be "", "lights", "groups", "config"
     
+    std::string getUrl = "http://" + hueBridgeIP + "/api/" + hueUser + "/" + hueGetObject;
     // GET request
     ofx::HTTP::GetRequest getRequest(getUrl);
     
@@ -208,23 +206,25 @@ void ofApp::hueGetRequest() {
 }
 
 //--------------------------------------------------------------
-void ofApp::huePutRequest() {
+void ofApp::hueSetup(int hueGroupNum) {
     
-    // Setting lights to daylight
+    std::string groupNumString = ofToString(hueGroupNum);
+    std::string putUrl = "http://" + hueBridgeIP + "/api/" + hueUser + "/groups/" + groupNumString + "/action";
+    // Hue values
     Json::Value messageBody;
+    
     messageBody["on"]             = true;
     messageBody["bri"]            = 254;     // 1-254 (254 brightest)
     messageBody["hue"]            = 0;       // 0-65535 (red to red)
-    messageBody["sat"]            = 254;     // 0-254 (0 = white)
+    messageBody["sat"]            = 0;       // 0-254 (0 = white)
     messageBody["alert"]          = "none";  // none, select, lselect
-    messageBody["effect"]         = "none";  // "colorloop" or none
-    messageBody["transitiontime"] = 0;      // 10 = 1sec;
+    messageBody["effect"]         = "none";  // colorloop or none
+    messageBody["transitiontime"] = 0;       // 10 = 1sec;
     messageBody["ct"]             = 153;     // 153 (6500K/daylight) - 500 (2000K/candlelight)
     
     bodyBuffer = messageBody.toStyledString();
     
     cout << bodyBuffer.getText() << endl;
-    
     
     ofx::HTTP::PutRequest putRequest(putUrl);
     putRequest.setPutBuffer(bodyBuffer);
@@ -241,7 +241,50 @@ void ofApp::huePutRequest() {
         
         // Flush the input stream.
         std::cout << std::endl;
-        std::cout << "============" << endl;        
+        std::cout << "============" << endl;
+    }
+    catch(const Poco::Exception& exc)
+    {
+        ofLogError("ofApp::setup") << "Got Exception " << exc.displayText() << " " << exc.code();
+    }
+    catch(...)
+    {
+        ofLogError("ofApp::setup") << "Got unknown exception.";
+    }
+}
+
+//--------------------------------------------------------------
+void ofApp::huePutColor(int lightNum, ofColor color, int transitionTime) {
+    
+    std::string lightNumString = ofToString(lightNum);
+    std::string putUrl = "http://" + hueBridgeIP + "/api/" + hueUser + "/lights/" + lightNumString + "/state";
+    // Hue values
+    Json::Value messageBody;
+    messageBody["hue"]            = color.getHue();       // 0-65535 (red to red)
+    messageBody["sat"]            = color.getSaturation();     // 0-254 (0 = white)
+    messageBody["bri"]            = color.getBrightness();     // 1-254 (254 brightest)
+    messageBody["transitiontime"] = transitionTime;      // 10 = 1sec;
+    
+    bodyBuffer = messageBody.toStyledString();
+    
+    cout << bodyBuffer.getText() << endl;
+    
+    ofx::HTTP::PutRequest putRequest(putUrl);
+    putRequest.setPutBuffer(bodyBuffer);
+    
+    try
+    {
+        // Execute the request and get the response stream.
+        std::istream& responseStream = client.execute(putRequest, response, context);
+        
+        // Request and response headers can be examined here.
+        std::cout << "============" << endl;
+        // Copy the output to the terminal.
+        Poco::StreamCopier::copyStream(responseStream, std::cout);
+        
+        // Flush the input stream.
+        std::cout << std::endl;
+        std::cout << "============" << endl;
     }
     catch(const Poco::Exception& exc)
     {

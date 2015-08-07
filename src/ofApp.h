@@ -44,14 +44,6 @@ class ofApp : public ofBaseApp{
     // Hue
     std::string hueBridgeIP;
     std::string hueUser;
-    std::string hueGetObject; // "", "lights", "groups", "config"
-    std::string hueLightNum;
-    std::string hueGroupNum;
-    
-    int hueTransitionTime;
-    
-    std::string getUrl;
-    std::string putUrl;
     
     ofx::HTTP::DefaultClient client;
     ofx::HTTP::Context context;
@@ -59,6 +51,7 @@ class ofApp : public ofBaseApp{
     
     ofBuffer bodyBuffer;
     
-    void hueGetRequest();
-    void huePutRequest();
+    void hueGet(string hueGetObject);
+    void hueSetup(int hueGroupNum);
+    void huePutColor(int bulbNum, ofColor color, int transitionTime);
 };
