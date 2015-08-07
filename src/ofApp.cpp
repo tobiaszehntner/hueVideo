@@ -3,10 +3,12 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+    
+    // Window
     ofSetWindowTitle("hueVideo");
-
     ofBackground(255);
     
+    // Video
     video.loadMovie("video.mov");
     video.setVolume(0);
     video.play();
@@ -18,6 +20,7 @@ void ofApp::setup(){
     
     ratio = video.getWidth()/videoPosW; // 1.6
     
+    // Sampling
     sampleNum = 9;
     sampleSize = 50; // pixels
     sampleW = sampleSize;
@@ -29,6 +32,20 @@ void ofApp::setup(){
     areaH = sampleH;
     
     smoothing = 0.8; // 0-1, 0 = no smoothing
+    
+    // Hue
+    hueBridgeIP = "192.168.100.100";
+    hueUser = "tobiaszehntner";
+    hueGetObject = "lights"; // "", "lights", "groups", "config"
+    hueLightNum = "1";
+    hueGroupNum = "2";
+    hueTransitionTime = 0; // 10 = 1sec, 600 = 1min
+    
+    // HTTP Setup
+    getUrl       = "http://" + hueBridgeIP + "/api/" + hueUser + "/" + hueGetObject;
+    putUrl = "http://" + hueBridgeIP + "/api/" + hueUser + "/lights/" + hueLightNum + "/state";
+    
+    
 }
 
 //--------------------------------------------------------------
@@ -157,6 +174,83 @@ ofColor ofApp::sample(int x, int y, int w, int h, ofPixels frame) {
     
     return averageColor;
 
+}
+
+//--------------------------------------------------------------
+void ofApp::hueGetRequest() {
+    
+    // GET request
+    ofx::HTTP::GetRequest getRequest(getUrl);
+    
+    // Print GET request
+    try
+    {
+        // Execute the request and get the response stream.
+        std::istream& responseStream = client.execute(getRequest, response, context);
+        // Request and response headers can be examined here.
+        std::cout << "============" << endl;
+        // Copy the output to the terminal.
+        Poco::StreamCopier::copyStream(responseStream, std::cout);
+        
+        // Flush the input stream.
+        std::cout << std::endl;
+        std::cout << "============" << endl;
+    }
+    catch(const Poco::Exception& exc)
+    {
+        ofLogError("ofApp::setup") << "Got Exception " << exc.displayText() << " " << exc.code();
+    }
+    catch(...)
+    {
+        ofLogError("ofApp::setup") << "Got unknown exception.";
+    }
+    
+}
+
+//--------------------------------------------------------------
+void ofApp::huePutRequest() {
+    
+    // Setting lights to daylight
+    Json::Value messageBody;
+    messageBody["on"]             = true;
+    messageBody["bri"]            = 254;     // 1-254 (254 brightest)
+    messageBody["hue"]            = 0;       // 0-65535 (red to red)
+    messageBody["sat"]            = 254;     // 0-254 (0 = white)
+    messageBody["alert"]          = "none";  // none, select, lselect
+    messageBody["effect"]         = "none";  // "colorloop" or none
+    messageBody["transitiontime"] = 0;      // 10 = 1sec;
+    messageBody["ct"]             = 153;     // 153 (6500K/daylight) - 500 (2000K/candlelight)
+    
+    bodyBuffer = messageBody.toStyledString();
+    
+    cout << bodyBuffer.getText() << endl;
+    
+    
+    ofx::HTTP::PutRequest putRequest(putUrl);
+    putRequest.setPutBuffer(bodyBuffer);
+    
+    try
+    {
+        // Execute the request and get the response stream.
+        std::istream& responseStream = client.execute(putRequest, response, context);
+        
+        // Request and response headers can be examined here.
+        std::cout << "============" << endl;
+        // Copy the output to the terminal.
+        Poco::StreamCopier::copyStream(responseStream, std::cout);
+        
+        // Flush the input stream.
+        std::cout << std::endl;
+        std::cout << "============" << endl;        
+    }
+    catch(const Poco::Exception& exc)
+    {
+        ofLogError("ofApp::setup") << "Got Exception " << exc.displayText() << " " << exc.code();
+    }
+    catch(...)
+    {
+        ofLogError("ofApp::setup") << "Got unknown exception.";
+    }
 }
 
 //--------------------------------------------------------------
