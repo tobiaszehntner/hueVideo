@@ -98,7 +98,7 @@ void ofApp::update(){
     }
     
     for (int i = 0; i < sampleNum; i++) {
-        huePutColor(i, averageColor[i], 0);
+        hueSetColor(i, averageColor[i], 0);
     }
 
 }
@@ -254,7 +254,7 @@ void ofApp::hueSetup(int hueGroupNum) {
 }
 
 //--------------------------------------------------------------
-void ofApp::huePutColor(int lightNum, ofColor color, int transitionTime) {
+void ofApp::hueSetColor(int lightNum, ofColor color, int transitionTime) {
     
     std::string lightNumString = ofToString(lightNum);
     std::string putUrl = "http://" + hueBridgeIP + "/api/" + hueUser + "/lights/" + lightNumString + "/state";

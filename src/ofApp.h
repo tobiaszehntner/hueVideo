@@ -53,5 +53,5 @@ class ofApp : public ofBaseApp{
     
     void hueGet(string hueGetObject);
     void hueSetup(int hueGroupNum);
-    void huePutColor(int bulbNum, ofColor color, int transitionTime);
+    void hueSetColor(int bulbNum, ofColor color, int transitionTime);
 };
