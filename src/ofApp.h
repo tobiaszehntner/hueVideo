@@ -42,6 +42,7 @@ class ofApp : public ofBaseApp{
     ofColor sample(int x, int y, int w, int h, ofPixels frame);
     
     // Hue
+    bool isHueOn;
     std::string hueBridgeIP;
     std::string hueUser;
     

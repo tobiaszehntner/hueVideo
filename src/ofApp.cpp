@@ -34,11 +34,14 @@ void ofApp::setup(){
     smoothing = 0.8; // 0-1, 0 = no smoothing
     
     // Hue
+    isHueOn = false;
     hueBridgeIP = "192.168.100.100";
     hueUser = "tobiaszehntner";
     
-    hueGet(""); // Print Hue setup to output (can be "", "lights", "groups", "config")
-    hueSetup(2); // Set general settings of Hue bulbs for groupNum
+    if(isHueOn) {
+        hueGet(""); // Print Hue setup to output (can be "", "lights", "groups", "config")
+        hueSetup(2); // Set general settings of Hue bulbs for groupNum
+    }
 }
 
 //--------------------------------------------------------------
@@ -97,10 +100,11 @@ void ofApp::update(){
         }
     }
     
-    for (int i = 0; i < sampleNum; i++) {
-        hueSetColor(i, averageColor[i], 0);
+    if(isHueOn) {
+        for (int i = 0; i < sampleNum; i++) {
+            hueSetColor(i, averageColor[i], 0);
+        }
     }
-
 }
 
 //--------------------------------------------------------------
@@ -125,16 +129,21 @@ void ofApp::draw(){
     }
     
     
-    ofSetColor(0);
-    ofDrawBitmapString("X/Y Distr [c-v/n-m] = " + ofToString(areaW-sampleW) + "/" + ofToString(areaH-sampleH) + "\n"
-                       "Center [arrowKeys]  = " + ofToString(areaCenter.x) + "/" + ofToString(areaCenter.y)
-                       , 10, 80);
-    ofDrawBitmapString("Samples [k-l]     = " + ofToString(sampleNum) + "\n" +
-                       "Sample size [a-s] = " + ofToString(sampleSize)
-                       , 300, 80);
-    ofDrawBitmapString("Smoothing [q-w] = " + ofToString(smoothing, 2) + "\n" +
-                       "Sample size [a-s] = " + ofToString(sampleSize)
-                       , 500, 80);
+    ofSetColor(255);
+    ofDrawBitmapString("[c-v/n-m] X/Y Distr   = " + ofToString(areaW-sampleW) + "/" + ofToString(areaH-sampleH) + "\n"
+                       "[arrows]  Center      = " + ofToString(areaCenter.x) + "/" + ofToString(areaCenter.y) + "\n"
+                       "[k-l]     Samples     = " + ofToString(sampleNum) + "\n" +
+                       "[a-s]     Sample size = " + ofToString(sampleSize) + "\n"
+                       "[q-w]     Smoothing   = " + ofToString(smoothing, 2) + "\n" +
+                       "[a-s]     Sample size = " + ofToString(sampleSize)
+                       , 10, 120);
+    if(isHueOn) {
+        ofDrawBitmapString("[o] Hue = On"
+                           , ofGetWindowWidth()-120, 120);
+    } else {
+        ofDrawBitmapString("[o] Hue = Off"
+                           , ofGetWindowWidth()-120, 120);
+    }
     
 }
 
@@ -376,6 +385,14 @@ void ofApp::keyPressed(int key){
             smoothing -= 0.01;
         } else {
             smoothing = 0;
+        }
+    }
+    
+    if (key == 'o'){
+        if(!isHueOn) {
+            isHueOn = true;
+        } else {
+            isHueOn = false;
         }
     }
 }
