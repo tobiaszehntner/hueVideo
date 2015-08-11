@@ -23,10 +23,11 @@ void ofApp::setup(){
     sampleW = sampleSize;
     sampleH = sampleSize;
     
-    areaCenter.x = screen.x+screen.width/2;
-    areaCenter.y = screen.y+screen.height/2;
-    areaW = screen.width;
-    areaH = sampleH;
+    samplingAreaCenter.x = screen.x+screen.width/2;
+    samplingAreaCenter.y = screen.y+screen.height/2;
+    samplingArea.width = screen.width;
+    samplingArea.height = sampleH;
+    
     
     smoothing = 0.8; // 0-1, 0 = no smoothing
 }
@@ -45,15 +46,15 @@ void ofApp::update(){
         int sampleY;
         
         if(sampleNum > 1) {
-            sampleX = areaCenter.x - (areaW/2) + ( ((areaW-sampleW) / (sampleNum-1)) * i);
+            sampleX = samplingAreaCenter.x - (samplingArea.width/2) + ( ((samplingArea.width-sampleW) / (sampleNum-1)) * i);
         } else {
-            sampleX = areaCenter.x - sampleW/2;
+            sampleX = samplingAreaCenter.x - sampleW/2;
         }
         
         if(sampleNum > 1) {
-            sampleY = areaCenter.y - (areaH/2) + ( ((areaH-sampleH) / (sampleNum-1)) * i);
+            sampleY = samplingAreaCenter.y - (samplingArea.height/2) + ( ((samplingArea.height-sampleH) / (sampleNum-1)) * i);
         } else {
-            sampleY = areaCenter.y - sampleH/2;
+            sampleY = samplingAreaCenter.y - sampleH/2;
         }
 
         ofVec2f loc(sampleX, sampleY);
@@ -112,8 +113,8 @@ void ofApp::draw(){
     
     
     ofSetColor(0);
-    ofDrawBitmapString("X/Y Distr [c-v/n-m] = " + ofToString(areaW-sampleW) + "/" + ofToString(areaH-sampleH) + "\n"
-                       "Center [arrowKeys]  = " + ofToString(areaCenter.x) + "/" + ofToString(areaCenter.y)
+    ofDrawBitmapString("X/Y Distr [c-v/n-m] = " + ofToString(samplingArea.width-sampleW) + "/" + ofToString(samplingArea.height-sampleH) + "\n"
+                       "Center [arrowKeys]  = " + ofToString(samplingAreaCenter.x) + "/" + ofToString(samplingAreaCenter.y)
                        , 10, 80);
     ofDrawBitmapString("Samples [k-l]     = " + ofToString(sampleNum) + "\n" +
                        "Sample size [a-s] = " + ofToString(sampleSize)
@@ -163,47 +164,47 @@ ofColor ofApp::sample(int x, int y, int w, int h, ofPixels frame) {
 void ofApp::keyPressed(int key){
     
     if (key == OF_KEY_DOWN){
-        if(areaCenter.y < (screen.y + screen.height - (sampleH/2))) {
-            areaCenter.y += 5;
+        if(samplingAreaCenter.y < (screen.y + screen.height - (sampleH/2))) {
+            samplingAreaCenter.y += 5;
         }
     }
     if (key == OF_KEY_UP){
-        if(areaCenter.y > (screen.y + (sampleH/2))) {
-            areaCenter.y -= 5;;
+        if(samplingAreaCenter.y > (screen.y + (sampleH/2))) {
+            samplingAreaCenter.y -= 5;;
         }
     }
     if (key == OF_KEY_RIGHT){
-        if(areaCenter.x < (screen.x + screen.width - (sampleW/2))) {
-            areaCenter.x += 5;;
+        if(samplingAreaCenter.x < (screen.x + screen.width - (sampleW/2))) {
+            samplingAreaCenter.x += 5;;
         }
     }
     if (key == OF_KEY_LEFT){
-        if(areaCenter.x > (screen.x + (sampleW/2))) {
-            areaCenter.x -= 5;;
+        if(samplingAreaCenter.x > (screen.x + (sampleW/2))) {
+            samplingAreaCenter.x -= 5;;
         }
     }
     
     if (key == 'n'){
         int num = (screen.width*-1)+(2*sampleW);
-        if(areaW > num) {
-            areaW -= 5;;
+        if(samplingArea.width > num) {
+            samplingArea.width -= 5;;
         }
     }
     if (key == 'm'){
-        if(areaW < screen.width) {
-            areaW += 5;;
+        if(samplingArea.width < screen.width) {
+            samplingArea.width += 5;;
         }
     }
     
     if (key == 'c'){
         int num = (screen.height*-1)+(2*sampleH);
-        if(areaH > num) {
-            areaH -= 5;;
+        if(samplingArea.height > num) {
+            samplingArea.height -= 5;;
         }
     }
     if (key == 'v'){
-        if(areaH < screen.height) {
-            areaH += 5;;
+        if(samplingArea.height < screen.height) {
+            samplingArea.height += 5;;
         }
     }
     

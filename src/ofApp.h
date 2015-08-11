@@ -31,8 +31,8 @@ class ofApp : public ofBaseApp{
     vector<ofColor> sampleColor;
     vector<ofColor> averageColor;
     
-    ofVec2f areaCenter;
-    float areaW, areaH;
+    ofRectangle samplingArea;
+    ofVec2f samplingAreaCenter;
     
     ofColor sample(int x, int y, int w, int h, ofPixels frame);
 		
