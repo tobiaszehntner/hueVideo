@@ -27,6 +27,8 @@ void ofApp::setup(){
     samplingAreaCenter.y = screen.y+screen.height/2;
     samplingArea.width = screen.width;
     samplingArea.height = sample.height;
+    samplingArea.x = screen.x;
+    samplingArea.y = screen.height/2;
     
     smoothing = 0.8; // 0-1, 0 = no smoothing
 }
@@ -114,7 +116,11 @@ void ofApp::draw(){
     
     ofSetColor(255);
     video.draw(screen);
-
+    
+    ofSetColor(ofColor::red);
+    ofNoFill();
+    ofRect(samplingArea);
+    
     for (int i = 0; i < sampleNum; i++) {
         ofSetColor(ofColor::green);
         ofNoFill();
@@ -133,7 +139,7 @@ void ofApp::draw(){
     
     ofSetColor(0);
     ofDrawBitmapString("X/Y Distr [c-v/n-m] = " + ofToString(samplingArea.width-sample.width) + "/" + ofToString(samplingArea.height-sample.height) + "\n"
-                       "Center [arrowKeys]  = " + ofToString(samplingAreaCenter.x) + "/" + ofToString(samplingAreaCenter.y)
+                       "Center [arrowKeys]  = " + ofToString(samplingArea.getCenter()) + "/" + ofToString(samplingAreaCenter.y)
                        , 10, 80);
     ofDrawBitmapString("Samples [k-l]     = " + ofToString(sampleNum) + "\n" +
                        "Sample size [a-s] = " + ofToString(sampleSize)
@@ -178,25 +184,27 @@ ofColor ofApp::getAverageColor(ofRectangle sample, ofPixels frame) {
 void ofApp::keyPressed(int key){
     
     if (key == OF_KEY_DOWN){
-        if(samplingAreaCenter.y < (screen.y + screen.height - (sample.height/2))) {
-            samplingAreaCenter.y += 5;
+        if(samplingArea.getBottom() < screen.getBottom()) {
+                samplingArea.y += 5;
         }
     }
+    
     if (key == OF_KEY_UP){
-        if(samplingAreaCenter.y > (screen.y + (sample.height/2))) {
-            samplingAreaCenter.y -= 5;;
+        if(samplingArea.getTop() > screen.getTop()) {
+            samplingArea.y -= 5;;
         }
     }
     if (key == OF_KEY_RIGHT){
-        if(samplingAreaCenter.x < (screen.x + screen.width - (sample.width/2))) {
-            samplingAreaCenter.x += 5;;
+        if(samplingArea.getRight() < screen.getRight()) {
+            samplingArea.x += 5;;
         }
     }
     if (key == OF_KEY_LEFT){
-        if(samplingAreaCenter.x > (screen.x + (sample.width/2))) {
-            samplingAreaCenter.x -= 5;;
+        if(samplingArea.getLeft() > screen.getLeft()) {
+            samplingArea.x -= 5;;
         }
     }
+    
     
     if (key == 'n'){
         int num = (screen.width*-1)+(2*sample.width);
