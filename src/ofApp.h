@@ -20,8 +20,8 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 
     ofVideoPlayer video;
-    int videoPosX, videoPosY, videoPosW, videoPosH;
     float ratio;
+    ofRectangle screen;
     
     int sampleNum;
     int sampleSize;

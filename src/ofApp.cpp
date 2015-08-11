@@ -11,21 +11,21 @@ void ofApp::setup(){
     video.setVolume(0);
     video.play();
     
-    videoPosX = 0;
-    videoPosY = 100;
-    videoPosW = ofGetWindowWidth();
-    videoPosH = ofGetWindowWidth()/video.getWidth()*video.getHeight();
+    screen.x = 0;
+    screen.y = 100;
+    screen.width = ofGetWindowWidth();
+    screen.height = ofGetWindowWidth()/video.getWidth()*video.getHeight();
     
-    ratio = video.getWidth()/videoPosW; // 1.6
+    ratio = video.getWidth()/screen.width; // 1.6
     
     sampleNum = 9;
     sampleSize = 50; // pixels
     sampleW = sampleSize;
     sampleH = sampleSize;
     
-    areaCenter.x = videoPosX+videoPosW/2;
-    areaCenter.y = videoPosY+videoPosH/2;
-    areaW = videoPosW;
+    areaCenter.x = screen.x+screen.width/2;
+    areaCenter.y = screen.y+screen.height/2;
+    areaW = screen.width;
     areaH = sampleH;
     
     smoothing = 0.8; // 0-1, 0 = no smoothing
@@ -93,7 +93,7 @@ void ofApp::update(){
 void ofApp::draw(){
     
     ofSetColor(255);
-    video.draw(videoPosX, videoPosY, videoPosW, videoPosH);
+    video.draw(screen);
 
     for (int i = 0; i < sampleNum; i++) {
         ofSetColor(ofColor::green);
@@ -127,8 +127,8 @@ void ofApp::draw(){
 //--------------------------------------------------------------
 ofColor ofApp::sample(int x, int y, int w, int h, ofPixels frame) {
     
-    x = (x-videoPosX)*ratio;
-    y = (y-videoPosY)*ratio;
+    x = (x-screen.x)*ratio;
+    y = (y-screen.y)*ratio;
     w = w*ratio;
     h = h*ratio;
     
@@ -163,46 +163,46 @@ ofColor ofApp::sample(int x, int y, int w, int h, ofPixels frame) {
 void ofApp::keyPressed(int key){
     
     if (key == OF_KEY_DOWN){
-        if(areaCenter.y < (videoPosY + videoPosH - (sampleH/2))) {
+        if(areaCenter.y < (screen.y + screen.height - (sampleH/2))) {
             areaCenter.y += 5;
         }
     }
     if (key == OF_KEY_UP){
-        if(areaCenter.y > (videoPosY + (sampleH/2))) {
+        if(areaCenter.y > (screen.y + (sampleH/2))) {
             areaCenter.y -= 5;;
         }
     }
     if (key == OF_KEY_RIGHT){
-        if(areaCenter.x < (videoPosX + videoPosW - (sampleW/2))) {
+        if(areaCenter.x < (screen.x + screen.width - (sampleW/2))) {
             areaCenter.x += 5;;
         }
     }
     if (key == OF_KEY_LEFT){
-        if(areaCenter.x > (videoPosX + (sampleW/2))) {
+        if(areaCenter.x > (screen.x + (sampleW/2))) {
             areaCenter.x -= 5;;
         }
     }
     
     if (key == 'n'){
-        int num = (videoPosW*-1)+(2*sampleW);
+        int num = (screen.width*-1)+(2*sampleW);
         if(areaW > num) {
             areaW -= 5;;
         }
     }
     if (key == 'm'){
-        if(areaW < videoPosW) {
+        if(areaW < screen.width) {
             areaW += 5;;
         }
     }
     
     if (key == 'c'){
-        int num = (videoPosH*-1)+(2*sampleH);
+        int num = (screen.height*-1)+(2*sampleH);
         if(areaH > num) {
             areaH -= 5;;
         }
     }
     if (key == 'v'){
-        if(areaH < videoPosH) {
+        if(areaH < screen.height) {
             areaH += 5;;
         }
     }
@@ -227,6 +227,16 @@ void ofApp::keyPressed(int key){
         if(sampleNum < 500) {
             sampleSize += 10;
         }
+//        bool isInside = true;
+//        for(int i = 0; i < sampleNum; i++) {
+//            if(!screen.inside(samplePos[i].x, samplePos[i].y) || !screen.inside(samplePos[i].x+sampleW, samplePos[i].y+sampleH)) {
+//                isInside = false;
+//            }
+//        }
+//        cout << isInside << endl;
+//        if(!isInside) {
+//            sampleSize -= 10;
+//        }
     }
     
     if (key == 'q'){
