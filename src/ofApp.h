@@ -26,15 +26,13 @@ class ofApp : public ofBaseApp{
     int sampleNum;
     int sampleSize;
     ofRectangle sample;
-    unsigned int sampleW, sampleH;
     float smoothing;
-    vector<ofVec2f> samplePos;
+    vector<ofRectangle> samples; // replace with ofRectangle
     vector<ofColor> sampleColor;
     vector<ofColor> averageColor;
-    
     ofRectangle samplingArea;
     ofVec2f samplingAreaCenter;
     
-    ofColor sample(int x, int y, int w, int h, ofPixels frame);
+    ofColor getAverageColor(ofRectangle sample, ofPixels frame);
 		
 };

@@ -28,7 +28,6 @@ void ofApp::setup(){
     samplingArea.width = screen.width;
     samplingArea.height = sample.height;
     
-    
     smoothing = 0.8; // 0-1, 0 = no smoothing
 }
 
@@ -38,30 +37,50 @@ void ofApp::update(){
     sample.width = sampleSize;
     sample.height = sampleSize;
 
-    samplePos.clear();
-    
+    samples.clear();
+
     for (int i = 0; i < sampleNum; i++) {
-    
-        int sampleX;
-        int sampleY;
+        
+        ofRectangle tempSample;
+        tempSample.width = sample.width;
+        tempSample.height = sample.height;
         
         if(sampleNum > 1) {
-            sampleX = samplingAreaCenter.x - (samplingArea.width/2) + ( ((samplingArea.width-sample.width) / (sampleNum-1)) * i);
+            tempSample.setFromCenter(
+                                     ((samplingArea.x+sample.width/2) + ((samplingArea.width-sample.width) / (sampleNum-1)) * i),
+                                     ((samplingArea.y+sample.height/2) + ((samplingArea.height-sample.height) / (sampleNum-1)) * i),
+                                     sample.width,
+                                     sample.height);
         } else {
-            sampleX = samplingAreaCenter.x - sample.width/2;
+            tempSample.setFromCenter(samplingArea.getCenter(), sample.width, sample.height);
         }
         
-        if(sampleNum > 1) {
-            sampleY = samplingAreaCenter.y - (samplingArea.height/2) + ( ((samplingArea.height-sample.height) / (sampleNum-1)) * i);
-        } else {
-            sampleY = samplingAreaCenter.y - sample.height/2;
-        }
-
-        ofVec2f loc(sampleX, sampleY);
-
-        samplePos.push_back(loc);
+        samples.push_back(tempSample);
         
     }
+    
+//    for (int i = 0; i < sampleNum; i++) {
+//    
+//        int sampleX;
+//        int sampleY;
+//        
+//        if(sampleNum > 1) {
+//            sampleX = samplingAreaCenter.x - (samplingArea.width/2) + ( ((samplingArea.width-sample.width) / (sampleNum-1)) * i);
+//        } else {
+//            sampleX = samplingAreaCenter.x - sample.width/2;
+//        }
+//        
+//        if(sampleNum > 1) {
+//            sampleY = samplingAreaCenter.y - (samplingArea.height/2) + ( ((samplingArea.height-sample.height) / (sampleNum-1)) * i);
+//        } else {
+//            sampleY = samplingAreaCenter.y - sample.height/2;
+//        }
+//
+//        ofVec2f loc(sampleX, sampleY);
+//
+//        samplePos.push_back(loc);
+//        
+//    }
     
     video.update();
     
@@ -70,7 +89,7 @@ void ofApp::update(){
         sampleColor.clear();
 
         for (int i = 0; i < sampleNum; i++) {
-            ofColor color = sample(samplePos[i].x,samplePos[i].y,sample.width,sample.height, video.getPixelsRef());
+            ofColor color = getAverageColor(samples[i], video.getPixelsRef());
             sampleColor.push_back(color);
         }
 
@@ -99,8 +118,8 @@ void ofApp::draw(){
     for (int i = 0; i < sampleNum; i++) {
         ofSetColor(ofColor::green);
         ofNoFill();
-        ofRect(samplePos[i].x,samplePos[i].y,sample.width,sample.height);
-        ofDrawBitmapString(ofToString(i+1), samplePos[i].x+5, samplePos[i].y+15);
+        ofRect(samples[i]);
+        ofDrawBitmapString(ofToString(i+1), samples[i].x+5, samples[i].y+15);
     }
     
     for (int i = 0; i < sampleNum; i++) {
@@ -126,12 +145,9 @@ void ofApp::draw(){
 }
 
 //--------------------------------------------------------------
-ofColor ofApp::sample(int x, int y, int w, int h, ofPixels frame) {
+ofColor ofApp::getAverageColor(ofRectangle sample, ofPixels frame) {
     
-    x = (x-screen.x)*ratio;
-    y = (y-screen.y)*ratio;
-    w = w*ratio;
-    h = h*ratio;
+    sample.scale(ratio);
     
     ofColor averageColor;
     
@@ -139,9 +155,9 @@ ofColor ofApp::sample(int x, int y, int w, int h, ofPixels frame) {
     int gSum = 0;
     int bSum = 0;
     
-    for(int i = x; i < (x+w); i++) {
+    for(int i = sample.x; i < (sample.x+sample.width); i++) {
         
-        for(int j = y; j < (y+h); j++) {
+        for(int j = sample.y; j < (sample.y+sample.height); j++) {
             
             ofColor pixelColor = frame.getColor(i, j);
             rSum += pixelColor.r;
@@ -149,12 +165,10 @@ ofColor ofApp::sample(int x, int y, int w, int h, ofPixels frame) {
             bSum += pixelColor.b;
         }
     }
-
-    int samples = w * h;
     
-    averageColor.r = rSum / samples;
-    averageColor.g = gSum / samples;
-    averageColor.b = bSum / samples;
+    averageColor.r = rSum / sample.getArea();
+    averageColor.g = gSum / sample.getArea();
+    averageColor.b = bSum / sample.getArea();
     
     return averageColor;
 
