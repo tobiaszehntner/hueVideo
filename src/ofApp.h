@@ -25,6 +25,7 @@ class ofApp : public ofBaseApp{
     
     int sampleNum;
     int sampleSize;
+    ofRectangle sample;
     unsigned int sampleW, sampleH;
     float smoothing;
     vector<ofVec2f> samplePos;

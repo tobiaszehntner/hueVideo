@@ -20,13 +20,13 @@ void ofApp::setup(){
     
     sampleNum = 9;
     sampleSize = 50; // pixels
-    sampleW = sampleSize;
-    sampleH = sampleSize;
+    sample.width = sampleSize;
+    sample.height = sampleSize;
     
     samplingAreaCenter.x = screen.x+screen.width/2;
     samplingAreaCenter.y = screen.y+screen.height/2;
     samplingArea.width = screen.width;
-    samplingArea.height = sampleH;
+    samplingArea.height = sample.height;
     
     
     smoothing = 0.8; // 0-1, 0 = no smoothing
@@ -35,8 +35,8 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
 
-    sampleW = sampleSize;
-    sampleH = sampleSize;
+    sample.width = sampleSize;
+    sample.height = sampleSize;
 
     samplePos.clear();
     
@@ -46,15 +46,15 @@ void ofApp::update(){
         int sampleY;
         
         if(sampleNum > 1) {
-            sampleX = samplingAreaCenter.x - (samplingArea.width/2) + ( ((samplingArea.width-sampleW) / (sampleNum-1)) * i);
+            sampleX = samplingAreaCenter.x - (samplingArea.width/2) + ( ((samplingArea.width-sample.width) / (sampleNum-1)) * i);
         } else {
-            sampleX = samplingAreaCenter.x - sampleW/2;
+            sampleX = samplingAreaCenter.x - sample.width/2;
         }
         
         if(sampleNum > 1) {
-            sampleY = samplingAreaCenter.y - (samplingArea.height/2) + ( ((samplingArea.height-sampleH) / (sampleNum-1)) * i);
+            sampleY = samplingAreaCenter.y - (samplingArea.height/2) + ( ((samplingArea.height-sample.height) / (sampleNum-1)) * i);
         } else {
-            sampleY = samplingAreaCenter.y - sampleH/2;
+            sampleY = samplingAreaCenter.y - sample.height/2;
         }
 
         ofVec2f loc(sampleX, sampleY);
@@ -70,7 +70,7 @@ void ofApp::update(){
         sampleColor.clear();
 
         for (int i = 0; i < sampleNum; i++) {
-            ofColor color = sample(samplePos[i].x,samplePos[i].y,sampleW,sampleH, video.getPixelsRef());
+            ofColor color = sample(samplePos[i].x,samplePos[i].y,sample.width,sample.height, video.getPixelsRef());
             sampleColor.push_back(color);
         }
 
@@ -99,7 +99,7 @@ void ofApp::draw(){
     for (int i = 0; i < sampleNum; i++) {
         ofSetColor(ofColor::green);
         ofNoFill();
-        ofRect(samplePos[i].x,samplePos[i].y,sampleW,sampleH);
+        ofRect(samplePos[i].x,samplePos[i].y,sample.width,sample.height);
         ofDrawBitmapString(ofToString(i+1), samplePos[i].x+5, samplePos[i].y+15);
     }
     
@@ -113,7 +113,7 @@ void ofApp::draw(){
     
     
     ofSetColor(0);
-    ofDrawBitmapString("X/Y Distr [c-v/n-m] = " + ofToString(samplingArea.width-sampleW) + "/" + ofToString(samplingArea.height-sampleH) + "\n"
+    ofDrawBitmapString("X/Y Distr [c-v/n-m] = " + ofToString(samplingArea.width-sample.width) + "/" + ofToString(samplingArea.height-sample.height) + "\n"
                        "Center [arrowKeys]  = " + ofToString(samplingAreaCenter.x) + "/" + ofToString(samplingAreaCenter.y)
                        , 10, 80);
     ofDrawBitmapString("Samples [k-l]     = " + ofToString(sampleNum) + "\n" +
@@ -164,28 +164,28 @@ ofColor ofApp::sample(int x, int y, int w, int h, ofPixels frame) {
 void ofApp::keyPressed(int key){
     
     if (key == OF_KEY_DOWN){
-        if(samplingAreaCenter.y < (screen.y + screen.height - (sampleH/2))) {
+        if(samplingAreaCenter.y < (screen.y + screen.height - (sample.height/2))) {
             samplingAreaCenter.y += 5;
         }
     }
     if (key == OF_KEY_UP){
-        if(samplingAreaCenter.y > (screen.y + (sampleH/2))) {
+        if(samplingAreaCenter.y > (screen.y + (sample.height/2))) {
             samplingAreaCenter.y -= 5;;
         }
     }
     if (key == OF_KEY_RIGHT){
-        if(samplingAreaCenter.x < (screen.x + screen.width - (sampleW/2))) {
+        if(samplingAreaCenter.x < (screen.x + screen.width - (sample.width/2))) {
             samplingAreaCenter.x += 5;;
         }
     }
     if (key == OF_KEY_LEFT){
-        if(samplingAreaCenter.x > (screen.x + (sampleW/2))) {
+        if(samplingAreaCenter.x > (screen.x + (sample.width/2))) {
             samplingAreaCenter.x -= 5;;
         }
     }
     
     if (key == 'n'){
-        int num = (screen.width*-1)+(2*sampleW);
+        int num = (screen.width*-1)+(2*sample.width);
         if(samplingArea.width > num) {
             samplingArea.width -= 5;;
         }
@@ -197,7 +197,7 @@ void ofApp::keyPressed(int key){
     }
     
     if (key == 'c'){
-        int num = (screen.height*-1)+(2*sampleH);
+        int num = (screen.height*-1)+(2*sample.height);
         if(samplingArea.height > num) {
             samplingArea.height -= 5;;
         }
@@ -230,7 +230,7 @@ void ofApp::keyPressed(int key){
         }
 //        bool isInside = true;
 //        for(int i = 0; i < sampleNum; i++) {
-//            if(!screen.inside(samplePos[i].x, samplePos[i].y) || !screen.inside(samplePos[i].x+sampleW, samplePos[i].y+sampleH)) {
+//            if(!screen.inside(samplePos[i].x, samplePos[i].y) || !screen.inside(samplePos[i].x+sample.width, samplePos[i].y+sample.height)) {
 //                isInside = false;
 //            }
 //        }
