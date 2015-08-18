@@ -20,15 +20,15 @@ void ofApp::setup(){
     
     sampleNum = 9;
     sampleSize = 50; // pixels
-    sample.width = sampleSize;
-    sample.height = sampleSize;
+    sampleGlobal.width = sampleSize;
+    sampleGlobal.height = sampleSize;
     
     samplingAreaCenter.x = screen.x+screen.width/2;
     samplingAreaCenter.y = screen.y+screen.height/2;
     samplingArea.width = screen.width;
-    samplingArea.height = sample.height;
+    samplingArea.height = sampleGlobal.height;
     samplingArea.x = screen.x;
-    samplingArea.y = screen.y+screen.height/2-sample.height/2;
+    samplingArea.y = screen.y+screen.height/2-sampleGlobal.height/2;
     
     smoothing = 0.8; // 0-1, 0 = no smoothing
 }
@@ -36,8 +36,8 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
 
-    sample.width = sampleSize;
-    sample.height = sampleSize;
+    sampleGlobal.width = sampleSize;
+    sampleGlobal.height = sampleSize;
     
     samples.clear();
 
@@ -47,12 +47,12 @@ void ofApp::update(){
         
         if(sampleNum > 1) {
             tempSample.setFromCenter(
-                                     ((samplingArea.x+sample.width/2) + ((samplingArea.width-sample.width) / (sampleNum-1)) * i),
-                                     ((samplingArea.y+sample.height/2) + ((samplingArea.height-sample.height) / (sampleNum-1)) * i),
-                                     sample.width,
-                                     sample.height);
+                                     ((samplingArea.x+sampleGlobal.width/2) + ((samplingArea.width-sampleGlobal.width) / (sampleNum-1)) * i),
+                                     ((samplingArea.y+sampleGlobal.height/2) + ((samplingArea.height-sampleGlobal.height) / (sampleNum-1)) * i),
+                                     sampleGlobal.width,
+                                     sampleGlobal.height);
         } else {
-            tempSample.setFromCenter(samplingArea.getCenter(), sample.width, sample.height);
+            tempSample.setFromCenter(samplingArea.getCenter(), sampleGlobal.width, sampleGlobal.height);
         }
         
         samples.push_back(tempSample);
@@ -112,7 +112,7 @@ void ofApp::draw(){
     
     
     ofSetColor(255);
-    ofDrawBitmapString("[c-v/n-m] X/Y Distr   = " + ofToString(samplingArea.width-sample.width) + "/" + ofToString(samplingArea.height-sample.height) + "\n"
+    ofDrawBitmapString("[c-v/n-m] X/Y Distr   = " + ofToString(samplingArea.width-sampleGlobal.width) + "/" + ofToString(samplingArea.height-sampleGlobal.height) + "\n"
                        "[arrows]  Center      = " + ofToString(samplingArea.getCenter(), 1) + "\n"
                        "[k-l]     Samples     = " + ofToString(sampleNum) + "\n" +
                        "[a-s]     Sample size = " + ofToString(sampleSize) + "\n"
@@ -125,10 +125,10 @@ void ofApp::draw(){
 //--------------------------------------------------------------
 ofColor ofApp::getAverageColor(ofRectangle sample, ofPixels frame) {
     
-    sample.x = (sample.x-screen.x)*ratio;
-    sample.y = (sample.y-screen.y)*ratio;
-    sample.width = sample.width*ratio;
-    sample.height = sample.height*ratio;
+    sampleGlobal.x = (sampleGlobal.x-screen.x)*ratio;
+    sampleGlobal.y = (sampleGlobal.y-screen.y)*ratio;
+    sampleGlobal.width = sampleGlobal.width*ratio;
+    sampleGlobal.height = sampleGlobal.height*ratio;
     
     ofColor averageColor;
     
@@ -136,9 +136,9 @@ ofColor ofApp::getAverageColor(ofRectangle sample, ofPixels frame) {
     int gSum = 0;
     int bSum = 0;
     
-    for(int i = sample.x; i < (sample.x+sample.width); i++) {
+    for(int i = sampleGlobal.x; i < (sampleGlobal.x+sampleGlobal.width); i++) {
         
-        for(int j = sample.y; j < (sample.y+sample.height-1); j++) {
+        for(int j = sampleGlobal.y; j < (sampleGlobal.y+sampleGlobal.height-1); j++) {
             
             ofColor pixelColor = frame.getColor(i, j);
             rSum += pixelColor.r;
@@ -147,9 +147,9 @@ ofColor ofApp::getAverageColor(ofRectangle sample, ofPixels frame) {
         }
     }
     
-    averageColor.r = rSum / sample.getArea();
-    averageColor.g = gSum / sample.getArea();
-    averageColor.b = bSum / sample.getArea();
+    averageColor.r = rSum / sampleGlobal.getArea();
+    averageColor.g = gSum / sampleGlobal.getArea();
+    averageColor.b = bSum / sampleGlobal.getArea();
     
     return averageColor;
 
@@ -159,42 +159,42 @@ ofColor ofApp::getAverageColor(ofRectangle sample, ofPixels frame) {
 void ofApp::keyPressed(int key){
     
     if (key == OF_KEY_DOWN){
-        if(samplingArea.y+sample.height < screen.getBottom() && samplingArea.y+samplingArea.height <screen.getBottom()) {
+        if(samplingArea.y+sampleGlobal.height < screen.getBottom() && samplingArea.y+samplingArea.height <screen.getBottom()) {
                 samplingArea.y += 5;
         }
     }
     if (key == OF_KEY_UP){
-        if(samplingArea.y > screen.getTop() && samplingArea.y+samplingArea.height-sample.height > screen.getTop()) {
+        if(samplingArea.y > screen.getTop() && samplingArea.y+samplingArea.height-sampleGlobal.height > screen.getTop()) {
             samplingArea.y -= 5;;
         }
     }
     if (key == OF_KEY_RIGHT){
-        if(samplingArea.x+sample.width < screen.getRight() && samplingArea.x+samplingArea.width < screen.getRight()) {
+        if(samplingArea.x+sampleGlobal.width < screen.getRight() && samplingArea.x+samplingArea.width < screen.getRight()) {
             samplingArea.x += 5;;
         }
     }
     if (key == OF_KEY_LEFT){
-        if(samplingArea.x > screen.getLeft() && samplingArea.x+samplingArea.width-sample.width > screen.getLeft()) {
+        if(samplingArea.x > screen.getLeft() && samplingArea.x+samplingArea.width-sampleGlobal.width > screen.getLeft()) {
             samplingArea.x -= 5;;
         }
     }
     
     
     if (key == 'n'){
-        if(samplingArea.x+samplingArea.width-sample.width < screen.getRight() &&
-           samplingArea.x+samplingArea.width-sample.width > screen.getLeft()) {
+        if(samplingArea.x+samplingArea.width-sampleGlobal.width < screen.getRight() &&
+           samplingArea.x+samplingArea.width-sampleGlobal.width > screen.getLeft()) {
             samplingArea.width -= 5;;
         }
     }
     if (key == 'm'){
         if(samplingArea.getRight() < screen.getRight() &&
-           samplingArea.getLeft()+sample.width > screen.getLeft()) {
+           samplingArea.getLeft()+sampleGlobal.width > screen.getLeft()) {
             samplingArea.width += 5;;
         }
     }
     
     if (key == 'c'){
-        if(samplingArea.getTop() > screen.getTop()+sample.height) {
+        if(samplingArea.getTop() > screen.getTop()+sampleGlobal.height) {
             samplingArea.height -= 5;;
         }
     }
@@ -227,7 +227,7 @@ void ofApp::keyPressed(int key){
         }
 //        bool isInside = true;
 //        for(int i = 0; i < sampleNum; i++) {
-//            if(!screen.inside(samplePos[i].x, samplePos[i].y) || !screen.inside(samplePos[i].x+sample.width, samplePos[i].y+sample.height)) {
+//            if(!screen.inside(samplePos[i].x, samplePos[i].y) || !screen.inside(samplePos[i].x+sampleGlobal.width, samplePos[i].y+sampleGlobal.height)) {
 //                isInside = false;
 //            }
 //        }

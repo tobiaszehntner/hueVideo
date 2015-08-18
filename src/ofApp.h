@@ -25,7 +25,7 @@ class ofApp : public ofBaseApp{
     
     int sampleNum;
     int sampleSize;
-    ofRectangle sample;
+    ofRectangle sampleGlobal;
     float smoothing;
     vector<ofRectangle> samples; // replace with ofRectangle
     vector<ofColor> sampleColor;
