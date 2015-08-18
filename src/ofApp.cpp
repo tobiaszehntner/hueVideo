@@ -125,7 +125,10 @@ void ofApp::draw(){
 //--------------------------------------------------------------
 ofColor ofApp::getAverageColor(ofRectangle sample, ofPixels frame) {
     
-    sample.scale(ratio);
+    sample.x = (sample.x-screen.x)*ratio;
+    sample.y = (sample.y-screen.y)*ratio;
+    sample.width = sample.width*ratio;
+    sample.height = sample.height*ratio;
     
     ofColor averageColor;
     
