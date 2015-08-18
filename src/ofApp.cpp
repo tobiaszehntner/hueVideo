@@ -123,12 +123,12 @@ void ofApp::draw(){
 }
 
 //--------------------------------------------------------------
-ofColor ofApp::getAverageColor(ofRectangle sample, ofPixels frame) {
+ofColor ofApp::getAverageColor(ofRectangle tempSample, ofPixels frame) {
     
-    sampleGlobal.x = (sampleGlobal.x-screen.x)*ratio;
-    sampleGlobal.y = (sampleGlobal.y-screen.y)*ratio;
-    sampleGlobal.width = sampleGlobal.width*ratio;
-    sampleGlobal.height = sampleGlobal.height*ratio;
+    tempSample.x = (tempSample.x-screen.x)*ratio;
+    tempSample.y = (tempSample.y-screen.y)*ratio;
+    tempSample.width = tempSample.width*ratio;
+    tempSample.height = tempSample.height*ratio;
     
     ofColor averageColor;
     
@@ -136,9 +136,9 @@ ofColor ofApp::getAverageColor(ofRectangle sample, ofPixels frame) {
     int gSum = 0;
     int bSum = 0;
     
-    for(int i = sampleGlobal.x; i < (sampleGlobal.x+sampleGlobal.width); i++) {
+    for(int i = tempSample.x; i < (tempSample.x+tempSample.width); i++) {
         
-        for(int j = sampleGlobal.y; j < (sampleGlobal.y+sampleGlobal.height-1); j++) {
+        for(int j = tempSample.y; j < (tempSample.y+tempSample.height-1); j++) {
             
             ofColor pixelColor = frame.getColor(i, j);
             rSum += pixelColor.r;
@@ -147,9 +147,9 @@ ofColor ofApp::getAverageColor(ofRectangle sample, ofPixels frame) {
         }
     }
     
-    averageColor.r = rSum / sampleGlobal.getArea();
-    averageColor.g = gSum / sampleGlobal.getArea();
-    averageColor.b = bSum / sampleGlobal.getArea();
+    averageColor.r = rSum / tempSample.getArea();
+    averageColor.g = gSum / tempSample.getArea();
+    averageColor.b = bSum / tempSample.getArea();
     
     return averageColor;
 
