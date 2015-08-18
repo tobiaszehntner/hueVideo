@@ -16,7 +16,7 @@ void ofApp::setup(){
     screen.width = ofGetWindowWidth();
     screen.height = ofGetWindowWidth()/video.getWidth()*video.getHeight();
     
-    ratio = video.getWidth()/screen.width; // 1.6
+    ratio = video.getWidth()/screen.width; // 2.4
     
     sampleNum = 9;
     sampleSize = 50; // pixels
@@ -28,7 +28,7 @@ void ofApp::setup(){
     samplingArea.width = screen.width;
     samplingArea.height = sample.height;
     samplingArea.x = screen.x;
-    samplingArea.y = screen.height/2;
+    samplingArea.y = screen.y+screen.height/2-sample.height/2;
     
     smoothing = 0.8; // 0-1, 0 = no smoothing
 }
@@ -38,14 +38,12 @@ void ofApp::update(){
 
     sample.width = sampleSize;
     sample.height = sampleSize;
-
+    
     samples.clear();
 
     for (int i = 0; i < sampleNum; i++) {
         
         ofRectangle tempSample;
-        tempSample.width = sample.width;
-        tempSample.height = sample.height;
         
         if(sampleNum > 1) {
             tempSample.setFromCenter(
@@ -60,29 +58,6 @@ void ofApp::update(){
         samples.push_back(tempSample);
         
     }
-    
-//    for (int i = 0; i < sampleNum; i++) {
-//    
-//        int sampleX;
-//        int sampleY;
-//        
-//        if(sampleNum > 1) {
-//            sampleX = samplingAreaCenter.x - (samplingArea.width/2) + ( ((samplingArea.width-sample.width) / (sampleNum-1)) * i);
-//        } else {
-//            sampleX = samplingAreaCenter.x - sample.width/2;
-//        }
-//        
-//        if(sampleNum > 1) {
-//            sampleY = samplingAreaCenter.y - (samplingArea.height/2) + ( ((samplingArea.height-sample.height) / (sampleNum-1)) * i);
-//        } else {
-//            sampleY = samplingAreaCenter.y - sample.height/2;
-//        }
-//
-//        ofVec2f loc(sampleX, sampleY);
-//
-//        samplePos.push_back(loc);
-//        
-//    }
     
     video.update();
     
@@ -117,10 +92,6 @@ void ofApp::draw(){
     ofSetColor(255);
     video.draw(screen);
     
-    ofSetColor(ofColor::red);
-    ofNoFill();
-    ofRect(samplingArea);
-    
     for (int i = 0; i < sampleNum; i++) {
         ofSetColor(ofColor::green);
         ofNoFill();
@@ -135,6 +106,9 @@ void ofApp::draw(){
         ofSetColor(255);
         ofDrawBitmapString(ofToString(i+1), 15 + (i*60), 25);
     }
+    
+    ofSetColor(ofColor::red);
+    ofLine(samplingArea.x, samplingArea.y, samplingArea.x+samplingArea.width, samplingArea.y+samplingArea.height);
     
     
     ofSetColor(0);
@@ -184,48 +158,47 @@ ofColor ofApp::getAverageColor(ofRectangle sample, ofPixels frame) {
 void ofApp::keyPressed(int key){
     
     if (key == OF_KEY_DOWN){
-        if(samplingArea.getBottom() < screen.getBottom()) {
+        if(samplingArea.y+sample.height < screen.getBottom() && samplingArea.y+samplingArea.height <screen.getBottom()) {
                 samplingArea.y += 5;
         }
     }
-    
     if (key == OF_KEY_UP){
-        if(samplingArea.getTop() > screen.getTop()) {
+        if(samplingArea.y > screen.getTop() && samplingArea.y+samplingArea.height-sample.height > screen.getTop()) {
             samplingArea.y -= 5;;
         }
     }
     if (key == OF_KEY_RIGHT){
-        if(samplingArea.getRight() < screen.getRight()) {
+        if(samplingArea.x+sample.width < screen.getRight() && samplingArea.x+samplingArea.width < screen.getRight()) {
             samplingArea.x += 5;;
         }
     }
     if (key == OF_KEY_LEFT){
-        if(samplingArea.getLeft() > screen.getLeft()) {
+        if(samplingArea.x > screen.getLeft() && samplingArea.x+samplingArea.width-sample.width > screen.getLeft()) {
             samplingArea.x -= 5;;
         }
     }
     
     
     if (key == 'n'){
-        int num = (screen.width*-1)+(2*sample.width);
-        if(samplingArea.width > num) {
+        if(samplingArea.x+samplingArea.width-sample.width < screen.getRight() &&
+           samplingArea.x+samplingArea.width-sample.width > screen.getLeft()) {
             samplingArea.width -= 5;;
         }
     }
     if (key == 'm'){
-        if(samplingArea.width < screen.width) {
+        if(samplingArea.getRight() < screen.getRight() &&
+           samplingArea.getLeft() > screen.getLeft()) {
             samplingArea.width += 5;;
         }
     }
     
     if (key == 'c'){
-        int num = (screen.height*-1)+(2*sample.height);
-        if(samplingArea.height > num) {
+        if(samplingArea.getTop() > screen.getTop()+sample.height) {
             samplingArea.height -= 5;;
         }
     }
     if (key == 'v'){
-        if(samplingArea.height < screen.height) {
+        if(samplingArea.getBottom() < screen.getBottom()) {
             samplingArea.height += 5;;
         }
     }
@@ -247,6 +220,7 @@ void ofApp::keyPressed(int key){
         }
     }
     if (key == 's'){
+        //if(screen.inside(<#float px#>, <#float py#>))
         if(sampleNum < 500) {
             sampleSize += 10;
         }
