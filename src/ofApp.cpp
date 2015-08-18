@@ -138,7 +138,7 @@ ofColor ofApp::getAverageColor(ofRectangle sample, ofPixels frame) {
     
     for(int i = sample.x; i < (sample.x+sample.width); i++) {
         
-        for(int j = sample.y; j < (sample.y+sample.height); j++) {
+        for(int j = sample.y; j < (sample.y+sample.height-1); j++) {
             
             ofColor pixelColor = frame.getColor(i, j);
             rSum += pixelColor.r;
