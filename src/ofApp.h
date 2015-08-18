@@ -24,22 +24,21 @@ class ofApp : public ofBaseApp{
     
     // Video
     ofVideoPlayer video;
-    int videoPosX, videoPosY, videoPosW, videoPosH;
     float ratio;
+    ofRectangle screen;
     
     // Sampling
     int sampleNum;
     int sampleSize;
-    unsigned int sampleW, sampleH;
+    ofRectangle sample;
     float smoothing;
-    vector<ofVec2f> samplePos;
+    vector<ofRectangle> samples; // replace with ofRectangle
     vector<ofColor> sampleColor;
     vector<ofColor> averageColor;
+    ofRectangle samplingArea;
+    ofVec2f samplingAreaCenter;
     
-    ofVec2f areaCenter;
-    float areaW, areaH;
-    
-    ofColor sample(int x, int y, int w, int h, ofPixels frame);
+    ofColor getAverageColor(ofRectangle sample, ofPixels frame);
     
     // Hue
     bool isHueOn;
