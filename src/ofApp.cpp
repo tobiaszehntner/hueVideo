@@ -111,16 +111,14 @@ void ofApp::draw(){
     ofLine(samplingArea.x, samplingArea.y, samplingArea.x+samplingArea.width, samplingArea.y+samplingArea.height);
     
     
-    ofSetColor(0);
-    ofDrawBitmapString("X/Y Distr [c-v/n-m] = " + ofToString(samplingArea.width-sample.width) + "/" + ofToString(samplingArea.height-sample.height) + "\n"
-                       "Center [arrowKeys]  = " + ofToString(samplingArea.getCenter()) + "/" + ofToString(samplingAreaCenter.y)
-                       , 10, 80);
-    ofDrawBitmapString("Samples [k-l]     = " + ofToString(sampleNum) + "\n" +
-                       "Sample size [a-s] = " + ofToString(sampleSize)
-                       , 300, 80);
-    ofDrawBitmapString("Smoothing [q-w] = " + ofToString(smoothing, 2) + "\n" +
-                       "Sample size [a-s] = " + ofToString(sampleSize)
-                       , 500, 80);
+    ofSetColor(255);
+    ofDrawBitmapString("[c-v/n-m] X/Y Distr   = " + ofToString(samplingArea.width-sample.width) + "/" + ofToString(samplingArea.height-sample.height) + "\n"
+                       "[arrows]  Center      = " + ofToString(samplingArea.getCenter(), 1) + "\n"
+                       "[k-l]     Samples     = " + ofToString(sampleNum) + "\n" +
+                       "[a-s]     Sample size = " + ofToString(sampleSize) + "\n"
+                       "[q-w]     Smoothing   = " + ofToString(smoothing, 2) + "\n" +
+                       "[a-s]     Sample size = " + ofToString(sampleSize)
+                       , 10, 120);
     
 }
 
@@ -187,7 +185,7 @@ void ofApp::keyPressed(int key){
     }
     if (key == 'm'){
         if(samplingArea.getRight() < screen.getRight() &&
-           samplingArea.getLeft() > screen.getLeft()) {
+           samplingArea.getLeft()+sample.width > screen.getLeft()) {
             samplingArea.width += 5;;
         }
     }
