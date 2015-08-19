@@ -30,7 +30,7 @@ class ofApp : public ofBaseApp{
     // Sampling
     int sampleNum;
     int sampleSize;
-    ofRectangle sample;
+    ofRectangle sampleGlobal;
     float smoothing;
     vector<ofRectangle> samples; // replace with ofRectangle
     vector<ofColor> sampleColor;
