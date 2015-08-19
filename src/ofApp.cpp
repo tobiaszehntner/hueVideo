@@ -216,24 +216,17 @@ void ofApp::keyPressed(int key){
 
     if (key == 'a'){
         if(sampleSize > 20) {
-            sampleSize -= 10;
+            sampleSize -= 5;
         }
     }
     if (key == 's'){
-        //if(screen.inside(<#float px#>, <#float py#>))
-        if(sampleNum < 500) {
-            sampleSize += 10;
+        if(samplingArea.y+sampleSize < screen.getBottom()
+           && samplingArea.y+samplingArea.height-sampleSize > screen.getTop()
+           && samplingArea.x+sampleSize < screen.getRight()
+           && samplingArea.x+samplingArea.width-sampleSize > screen.getLeft()
+           ) {
+            sampleSize += 5;
         }
-//        bool isInside = true;
-//        for(int i = 0; i < sampleNum; i++) {
-//            if(!screen.inside(samplePos[i].x, samplePos[i].y) || !screen.inside(samplePos[i].x+sampleGlobal.width, samplePos[i].y+sampleGlobal.height)) {
-//                isInside = false;
-//            }
-//        }
-//        cout << isInside << endl;
-//        if(!isInside) {
-//            sampleSize -= 10;
-//        }
     }
     
     if (key == 'q'){
