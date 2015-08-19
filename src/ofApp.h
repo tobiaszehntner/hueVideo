@@ -43,7 +43,7 @@ class ofApp : public ofBaseApp{
     
     // Hue
     bool isHueOn;
-    int hueUpdateDecisecond;
+    float hueUpdateDecisecond;
     long hueUpdateTimer;
     int hueUpdateLast;
     std::string hueBridgeIP;
@@ -58,4 +58,5 @@ class ofApp : public ofBaseApp{
     void hueGet(string hueGetObject);
     void hueSetup(int hueGroupNum);
     void hueSetColor(int bulbNum, ofColor color, int transitionTime);
+    void hueOff(int hueGroupNum);
 };

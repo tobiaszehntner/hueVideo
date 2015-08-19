@@ -39,7 +39,7 @@ void ofApp::setup(){
     isHueOn = false;
     hueBridgeIP = "192.168.100.100";
     hueUser = "tobiaszehntner";
-    hueUpdateDecisecond = 5;
+    hueUpdateDecisecond = sampleNum;
     hueUpdateTimer = 0;
     hueUpdateLast = 0;
     
@@ -56,7 +56,7 @@ void ofApp::update(){
     sampleGlobal.height = sampleSize;
     
     samples.clear();
-
+    
     for (int i = 0; i < sampleNum; i++) {
         
         ofRectangle tempSample;
@@ -101,19 +101,17 @@ void ofApp::update(){
     }
     hueUpdateTimer =  ofGetElapsedTimeMillis()/100;
     
-    cout << "hueUpdateDecisecond: " << hueUpdateDecisecond << " / " << hueUpdateTimer;
     if(isHueOn) {
         
         if(hueUpdateTimer >= hueUpdateLast + hueUpdateDecisecond) {
             
             for (int i = 0; i < sampleNum; i++) {
                 // hueSetColor(i, averageColor[i], hueUpdateDecisecond);
+                // delay 100ms?
             }
             hueUpdateLast = hueUpdateTimer;
-            cout << " -> send to Hue";
         }
     }
-    cout << endl;
 }
 
 //--------------------------------------------------------------
@@ -141,22 +139,19 @@ void ofApp::draw(){
     ofLine(samplingArea.x, samplingArea.y, samplingArea.x+samplingArea.width, samplingArea.y+samplingArea.height);
     
     ofSetColor(255);
-    ofDrawBitmapString("[c-v/n-m] X/Y Distr   = " + ofToString(samplingArea.width-sampleGlobal.width) + "/" + ofToString(samplingArea.height-sampleGlobal.height) + "\n"
-                       "[arrows]  Center      = " + ofToString(samplingArea.getCenter(), 1) + "\n"
-                       "[k-l]     Samples     = " + ofToString(sampleNum) + "\n" +
-                       "[a-s]     Sample size = " + ofToString(sampleSize) + "\n"
-                       "[q-w]     Smoothing   = " + ofToString(smoothing, 2) + "\n" +
-                       "[a-s]     Sample size = " + ofToString(sampleSize)
-                       , 10, 120);
+    ofDrawBitmapString("[c-v/n-m] X/Y Distr   = " + ofToString(samplingArea.width-sampleGlobal.width) + "/" + ofToString(samplingArea.height-sampleGlobal.height)
+              + "\n" + "[arrows]  Center      = " + ofToString(samplingArea.getCenter(), 1)
+              + "\n" + "[k-l]     Samples     = " + ofToString(sampleNum)
+              + "\n" + "[a-s]     Sample size = " + ofToString(sampleSize)
+              + "\n" + "[q-w]     Smoothing   = " + ofToString(smoothing, 2)
+              + "\n" + "[a-s]     Sample size = " + ofToString(sampleSize)
+              , 10, 120);
     if(isHueOn) {
-        ofDrawBitmapString("[o] Hue = On"
-                           , ofGetWindowWidth()-200, 120);
+        ofDrawBitmapString("[o] Hue = On", ofGetWindowWidth()-200, 120);
     } else {
-        ofDrawBitmapString("[o] Hue = Off"
-                           , ofGetWindowWidth()-200, 120);
+        ofDrawBitmapString("[o] Hue = Off", ofGetWindowWidth()-200, 120);
     }
-    ofDrawBitmapString("[u-i] HueUpdate = " + ofToString(hueUpdateDecisecond)
-                       , ofGetWindowWidth()-200, 135);
+    ofDrawBitmapString("[u-i] HueUpdate = " + ofToString(hueUpdateDecisecond/10, 1) + "s", ofGetWindowWidth()-200, 135);
     
 }
 
@@ -273,6 +268,47 @@ void ofApp::hueSetup(int hueGroupNum) {
 }
 
 //--------------------------------------------------------------
+void ofApp::hueOff(int hueGroupNum) {
+    
+    std::string groupNumString = ofToString(hueGroupNum);
+    std::string putUrl = "http://" + hueBridgeIP + "/api/" + hueUser + "/groups/" + groupNumString + "/action";
+    // Hue values
+    Json::Value messageBody;
+    
+    messageBody["on"]             = false;
+    
+    bodyBuffer = messageBody.toStyledString();
+    
+    cout << bodyBuffer.getText() << endl;
+    
+    ofx::HTTP::PutRequest putRequest(putUrl);
+    putRequest.setPutBuffer(bodyBuffer);
+    
+    try
+    {
+        // Execute the request and get the response stream.
+        std::istream& responseStream = client.execute(putRequest, response, context);
+        
+        // Request and response headers can be examined here.
+        std::cout << "============" << endl;
+        // Copy the output to the terminal.
+        Poco::StreamCopier::copyStream(responseStream, std::cout);
+        
+        // Flush the input stream.
+        std::cout << std::endl;
+        std::cout << "============" << endl;
+    }
+    catch(const Poco::Exception& exc)
+    {
+        ofLogError("ofApp::setup") << "Got Exception " << exc.displayText() << " " << exc.code();
+    }
+    catch(...)
+    {
+        ofLogError("ofApp::setup") << "Got unknown exception.";
+    }
+}
+
+//--------------------------------------------------------------
 void ofApp::hueSetColor(int lightNum, ofColor color, int transitionTime) {
     
     std::string lightNumString = ofToString(lightNum);
@@ -343,24 +379,24 @@ void ofApp::keyPressed(int key){
     if (key == 'n'){
         if(samplingArea.x+samplingArea.width-sampleGlobal.width < screen.getRight() &&
            samplingArea.x+samplingArea.width-sampleGlobal.width > screen.getLeft()) {
-            samplingArea.width -= 5;;
+            samplingArea.width -= 5;
         }
     }
     if (key == 'm'){
         if(samplingArea.getRight() < screen.getRight() &&
            samplingArea.getLeft()+sampleGlobal.width > screen.getLeft()) {
-            samplingArea.width += 5;;
+            samplingArea.width += 5;
         }
     }
     
     if (key == 'c'){
         if(samplingArea.getTop() > screen.getTop()+sampleGlobal.height) {
-            samplingArea.height -= 5;;
+            samplingArea.height -= 5;
         }
     }
     if (key == 'v'){
         if(samplingArea.getBottom() < screen.getBottom()) {
-            samplingArea.height += 5;;
+            samplingArea.height += 5;
         }
     }
     
@@ -379,6 +415,9 @@ void ofApp::keyPressed(int key){
         }
         if(sampleNum < 10) {
             sampleNum++;
+            if(hueUpdateDecisecond < sampleNum) {
+                hueUpdateDecisecond = sampleNum;
+            }
         }
     }
 
@@ -414,13 +453,15 @@ void ofApp::keyPressed(int key){
     // Hue
     if (key == 'o'){
         if(!isHueOn) {
+            hueSetup(2);
             isHueOn = true;
         } else {
+            hueOff(2);
             isHueOn = false;
         }
     }
     if (key == 'u'){
-        if(hueUpdateDecisecond > 5) {
+        if(hueUpdateDecisecond > sampleNum) {
             hueUpdateDecisecond -= 1;
         }
     }
