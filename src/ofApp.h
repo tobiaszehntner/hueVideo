@@ -36,12 +36,16 @@ class ofApp : public ofBaseApp{
     vector<ofColor> sampleColor;
     vector<ofColor> averageColor;
     ofRectangle samplingArea;
+    ofRectangle samplingAreaPrevious;
     ofVec2f samplingAreaCenter;
     
     ofColor getAverageColor(ofRectangle sample, ofPixels frame);
     
     // Hue
     bool isHueOn;
+    int hueUpdateDecisecond;
+    long hueUpdateTimer;
+    int hueUpdateLast;
     std::string hueBridgeIP;
     std::string hueUser;
     

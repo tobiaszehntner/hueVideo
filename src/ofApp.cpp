@@ -39,6 +39,9 @@ void ofApp::setup(){
     isHueOn = false;
     hueBridgeIP = "192.168.100.100";
     hueUser = "tobiaszehntner";
+    hueUpdateDecisecond = 5;
+    hueUpdateTimer = 0;
+    hueUpdateLast = 0;
     
     if(isHueOn) {
         hueGet(""); // Print Hue setup to output (can be "", "lights", "groups", "config")
@@ -96,12 +99,21 @@ void ofApp::update(){
             }
         }
     }
+    hueUpdateTimer =  ofGetElapsedTimeMillis()/100;
     
+    cout << "hueUpdateDecisecond: " << hueUpdateDecisecond << " / " << hueUpdateTimer;
     if(isHueOn) {
-        for (int i = 0; i < sampleNum; i++) {
-            hueSetColor(i, averageColor[i], 0);
+        
+        if(hueUpdateTimer >= hueUpdateLast + hueUpdateDecisecond) {
+            
+            for (int i = 0; i < sampleNum; i++) {
+                // hueSetColor(i, averageColor[i], hueUpdateDecisecond);
+            }
+            hueUpdateLast = hueUpdateTimer;
+            cout << " -> send to Hue";
         }
     }
+    cout << endl;
 }
 
 //--------------------------------------------------------------
@@ -138,11 +150,13 @@ void ofApp::draw(){
                        , 10, 120);
     if(isHueOn) {
         ofDrawBitmapString("[o] Hue = On"
-                           , ofGetWindowWidth()-120, 120);
+                           , ofGetWindowWidth()-200, 120);
     } else {
         ofDrawBitmapString("[o] Hue = Off"
-                           , ofGetWindowWidth()-120, 120);
+                           , ofGetWindowWidth()-200, 120);
     }
+    ofDrawBitmapString("[u-i] HueUpdate = " + ofToString(hueUpdateDecisecond)
+                       , ofGetWindowWidth()-200, 135);
     
 }
 
@@ -224,7 +238,7 @@ void ofApp::hueSetup(int hueGroupNum) {
     messageBody["sat"]            = 0;       // 0-254 (0 = white)
     messageBody["alert"]          = "none";  // none, select, lselect
     messageBody["effect"]         = "none";  // colorloop or none
-    messageBody["transitiontime"] = 0;       // 10 = 1sec;
+    messageBody["transitiontime"] = hueUpdateDecisecond;       // 10 = 1sec;
     messageBody["ct"]             = 153;     // 153 (6500K/daylight) - 500 (2000K/candlelight)
     
     bodyBuffer = messageBody.toStyledString();
@@ -351,11 +365,18 @@ void ofApp::keyPressed(int key){
     }
     
     if (key == 'k'){
+        if(sampleNum == 2) {
+            samplingAreaPrevious = samplingArea;
+            samplingArea.setFromCenter(samplingArea.getCenter(), sampleGlobal.width, sampleGlobal.height);
+        }
         if(sampleNum > 1) {
             sampleNum--;
         }
     }
     if (key == 'l'){
+        if(sampleNum == 1) {
+            samplingArea = samplingAreaPrevious;
+        }
         if(sampleNum < 10) {
             sampleNum++;
         }
@@ -390,11 +411,22 @@ void ofApp::keyPressed(int key){
         }
     }
     
+    // Hue
     if (key == 'o'){
         if(!isHueOn) {
             isHueOn = true;
         } else {
             isHueOn = false;
+        }
+    }
+    if (key == 'u'){
+        if(hueUpdateDecisecond > 5) {
+            hueUpdateDecisecond -= 1;
+        }
+    }
+    if (key == 'i'){
+        if(hueUpdateDecisecond < 60) {
+            hueUpdateDecisecond += 1;
         }
     }
 }
