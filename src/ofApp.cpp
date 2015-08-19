@@ -30,7 +30,7 @@ void ofApp::setup(){
     samplingArea.x = screen.x;
     samplingArea.y = screen.y+screen.height/2-sampleGlobal.height/2;
     
-    smoothing = 0.8; // 0-1, 0 = no smoothing
+    smoothing = 0; // 0-1, 0 = no smoothing
 }
 
 //--------------------------------------------------------------
@@ -96,7 +96,7 @@ void ofApp::draw(){
         ofSetColor(ofColor::green);
         ofNoFill();
         ofRect(samples[i]);
-        ofDrawBitmapString(ofToString(i+1), samples[i].x+5, samples[i].y+15);
+        ofDrawBitmapString(ofToString(i), samples[i].x+5, samples[i].y+15);
     }
     
     for (int i = 0; i < sampleNum; i++) {
@@ -104,7 +104,7 @@ void ofApp::draw(){
         ofFill();    
         ofRect(10 + (i*60), 10, 50, 50);
         ofSetColor(255);
-        ofDrawBitmapString(ofToString(i+1), 15 + (i*60), 25);
+        ofDrawBitmapString(ofToString(i), 15 + (i*60), 25);
     }
     
     ofSetColor(ofColor::red);
@@ -135,7 +135,6 @@ ofColor ofApp::getAverageColor(ofRectangle tempSample, ofPixels frame) {
     int rSum = 0;
     int gSum = 0;
     int bSum = 0;
-    
     for(int i = tempSample.x; i < (tempSample.x+tempSample.width); i++) {
         
         for(int j = tempSample.y; j < (tempSample.y+tempSample.height-1); j++) {
