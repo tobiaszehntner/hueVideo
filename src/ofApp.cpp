@@ -116,8 +116,7 @@ void ofApp::draw(){
                        "[arrows]  Center      = " + ofToString(samplingArea.getCenter(), 1) + "\n"
                        "[k-l]     Samples     = " + ofToString(sampleNum) + "\n" +
                        "[a-s]     Sample size = " + ofToString(sampleSize) + "\n"
-                       "[q-w]     Smoothing   = " + ofToString(smoothing, 2) + "\n" +
-                       "[a-s]     Sample size = " + ofToString(sampleSize)
+                       "[q-w]     Smoothing   = " + ofToString(smoothing, 2)
                        , 10, 120);
     
 }
