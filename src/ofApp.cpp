@@ -268,7 +268,7 @@ void ofApp::hueSetup(int hueGroupNum) {
 }
 
 //--------------------------------------------------------------
-void ofApp::hueOff(int hueGroupNum) {
+void ofApp::hueOffAll(int hueGroupNum) {
     
     std::string groupNumString = ofToString(hueGroupNum);
     std::string putUrl = "http://" + hueBridgeIP + "/api/" + hueUser + "/groups/" + groupNumString + "/action";
@@ -456,7 +456,7 @@ void ofApp::keyPressed(int key){
             hueSetup(2);
             isHueOn = true;
         } else {
-            hueOff(2);
+            hueOffAll(2);
             isHueOn = false;
         }
     }
