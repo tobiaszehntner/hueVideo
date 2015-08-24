@@ -144,7 +144,6 @@ void ofApp::draw(){
               + "\n" + "[k-l]     Samples     = " + ofToString(sampleNum)
               + "\n" + "[a-s]     Sample size = " + ofToString(sampleSize)
               + "\n" + "[q-w]     Smoothing   = " + ofToString(smoothing, 2)
-              + "\n" + "[a-s]     Sample size = " + ofToString(sampleSize)
               , 10, 120);
     if(isHueOn) {
         ofDrawBitmapString("[o] Hue = On", ofGetWindowWidth()-200, 120);
