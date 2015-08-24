@@ -182,24 +182,28 @@ void ofApp::keyPressed(int key){
     if (key == 'n'){
         if(samplingArea.x+samplingArea.width-sampleGlobal.width < screen.getRight() &&
            samplingArea.x+samplingArea.width-sampleGlobal.width > screen.getLeft()) {
-            samplingArea.width -= 5;;
+            samplingArea.width -= 5;
+            samplingArea.x += 2.5;
         }
     }
     if (key == 'm'){
         if(samplingArea.getRight() < screen.getRight() &&
            samplingArea.getLeft()+sampleGlobal.width > screen.getLeft()) {
-            samplingArea.width += 5;;
+            samplingArea.width += 5;
+            samplingArea.x -= 2.5;
         }
     }
     
     if (key == 'c'){
         if(samplingArea.getTop() > screen.getTop()+sampleGlobal.height) {
-            samplingArea.height -= 5;;
+            samplingArea.height -= 5;
+            samplingArea.y += 2.5;
         }
     }
     if (key == 'v'){
         if(samplingArea.getBottom() < screen.getBottom()) {
-            samplingArea.height += 5;;
+            samplingArea.height += 5;
+            samplingArea.y -= 2.5;
         }
     }
     
