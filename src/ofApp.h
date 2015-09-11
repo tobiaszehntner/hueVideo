@@ -35,6 +35,7 @@ class ofApp : public ofBaseApp{
     vector<ofRectangle> samples; // replace with ofRectangle
     vector<ofColor> sampleColor;
     vector<ofColor> averageColor;
+    vector<ofColor> hueColor;
     ofRectangle samplingArea;
     ofRectangle samplingAreaPrevious;
     ofVec2f samplingAreaCenter;

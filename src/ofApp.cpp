@@ -14,7 +14,7 @@ void ofApp::setup(){
     video.play();
     
     screen.x = 0;
-    screen.y = 100;
+    screen.y = 150;
     screen.width = ofGetWindowWidth();
     screen.height = ofGetWindowWidth()/video.getWidth()*video.getHeight();
     
@@ -37,7 +37,7 @@ void ofApp::setup(){
     
     // Hue
     isHueOn = false;
-    hueBridgeIP = "192.168.100.100";
+    hueBridgeIP = "192.168.100.101";
     hueUser = "tobiaszehntner";
     hueUpdateDecisecond = sampleNum;
     hueUpdateTimer = 0;
@@ -106,7 +106,8 @@ void ofApp::update(){
         if(hueUpdateTimer >= hueUpdateLast + hueUpdateDecisecond) {
             
             for (int i = 0; i < sampleNum; i++) {
-                hueSetColor(i, averageColor[i], hueUpdateDecisecond);
+                hueColor[i] = averageColor[i];
+                hueSetColor(i, hueColor[i], hueUpdateDecisecond);
             }
             hueUpdateLast = hueUpdateTimer;
         }
@@ -126,16 +127,33 @@ void ofApp::draw(){
         ofDrawBitmapString(ofToString(i), samples[i].x+5, samples[i].y+15);
     }
     
+    ofSetColor(ofColor::red);
+    ofLine(samplingArea.x, samplingArea.y, samplingArea.x+samplingArea.width, samplingArea.y+samplingArea.height);
+    
+    ofSetColor(0);
+    ofDrawBitmapString("Video", 10, 25);
     for (int i = 0; i < sampleNum; i++) {
         ofSetColor(averageColor[i]);
         ofFill();    
-        ofRect(10 + (i*60), 10, 50, 50);
+        ofRect(60 + (i*60), 10, 50, 50);
         ofSetColor(255);
-        ofDrawBitmapString(ofToString(i), 15 + (i*60), 25);
+        ofDrawBitmapString(ofToString(i), 65 + (i*60), 25);
     }
     
-    ofSetColor(ofColor::red);
-    ofLine(samplingArea.x, samplingArea.y, samplingArea.x+samplingArea.width, samplingArea.y+samplingArea.height);
+    ofSetColor(0);
+    ofDrawBitmapString("Hue", 10, 85);
+    for (int i = 0; i < sampleNum; i++) {
+        if(isHueOn) {
+            ofSetColor(hueColor[i]);
+            ofFill();
+        } else {
+            ofSetColor(0);
+            ofNoFill();
+        }
+        ofRect(60 + (i*60), 70, 50, 50);
+        ofSetColor(255);
+        ofDrawBitmapString(ofToString(i), 65 + (i*60), 85);
+    }
     
     ofSetColor(255);
     ofDrawBitmapString("[c-v/n-m] X/Y Distr   = " + ofToString(samplingArea.width-sampleGlobal.width) + "/" + ofToString(samplingArea.height-sampleGlobal.height)
@@ -143,13 +161,13 @@ void ofApp::draw(){
               + "\n" + "[k-l]     Samples     = " + ofToString(sampleNum)
               + "\n" + "[a-s]     Sample size = " + ofToString(sampleSize)
               + "\n" + "[q-w]     Smoothing   = " + ofToString(smoothing, 2)
-              , 10, 120);
+              , 10, 170);
     if(isHueOn) {
-        ofDrawBitmapString("[o] Hue = On", ofGetWindowWidth()-200, 120);
+        ofDrawBitmapString("[o] Hue = On", ofGetWindowWidth()-200, 170);
     } else {
-        ofDrawBitmapString("[o] Hue = Off", ofGetWindowWidth()-200, 120);
+        ofDrawBitmapString("[o] Hue = Off", ofGetWindowWidth()-200, 170);
     }
-    ofDrawBitmapString("[u-i] HueUpdate = " + ofToString(hueUpdateDecisecond/10, 1) + "s", ofGetWindowWidth()-200, 135);
+    ofDrawBitmapString("[u-i] HueUpdate = " + ofToString(hueUpdateDecisecond/10, 1) + "s", ofGetWindowWidth()-200, 185);
     
 }
 
