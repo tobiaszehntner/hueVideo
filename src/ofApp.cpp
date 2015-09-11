@@ -138,7 +138,7 @@ void ofApp::draw(){
         ofRect(60 + (i*60), 10, 50, 50);
         ofSetColor(128);
         ofDrawBitmapString(ofToString(i), 65 + (i*60), 25);
-    }    
+    }
     
     ofSetColor(0);
     ofDrawBitmapString("Hue", 10, 85);
@@ -154,6 +154,10 @@ void ofApp::draw(){
         ofSetColor(128);
         ofDrawBitmapString(ofToString(i), 65 + (i*60), 85);
     }
+    
+    ofSetColor(0, 0, 0, 80);
+    ofFill();
+    ofRect(screen.x, screen.y, screen.width, 90);
     
     ofSetColor(255);
     ofDrawBitmapString("[c-v/n-m] X/Y Distr   = " + ofToString(samplingArea.width-sampleGlobal.width) + "/" + ofToString(samplingArea.height-sampleGlobal.height)
