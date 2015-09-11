@@ -106,8 +106,7 @@ void ofApp::update(){
         if(hueUpdateTimer >= hueUpdateLast + hueUpdateDecisecond) {
             
             for (int i = 0; i < sampleNum; i++) {
-                // hueSetColor(i, averageColor[i], hueUpdateDecisecond);
-                // delay 100ms?
+                hueSetColor(i, averageColor[i], hueUpdateDecisecond);
             }
             hueUpdateLast = hueUpdateTimer;
         }
@@ -310,13 +309,18 @@ void ofApp::hueOffAll(int hueGroupNum) {
 //--------------------------------------------------------------
 void ofApp::hueSetColor(int lightNum, ofColor color, int transitionTime) {
     
-    std::string lightNumString = ofToString(lightNum);
+    std::string lightNumString = ofToString(lightNum+1); // Hue lights start at 1, array starts at 0, therefor +1
     std::string putUrl = "http://" + hueBridgeIP + "/api/" + hueUser + "/lights/" + lightNumString + "/state";
-    // Hue values
+    
+    // Make sure color data is in int
+    int hue = color.getHue();
+    int saturation = color.getSaturation();
+    int brightness = color.getBrightness();
+    
     Json::Value messageBody;
-    messageBody["hue"]            = color.getHue();       // 0-65535 (red to red)
-    messageBody["sat"]            = color.getSaturation();     // 0-254 (0 = white)
-    messageBody["bri"]            = color.getBrightness();     // 1-254 (254 brightest)
+    messageBody["hue"]            = hue;       // 0-65535 (red to red)
+    messageBody["sat"]            = saturation;     // 0-254 (0 = white)
+    messageBody["bri"]            = brightness;     // 1-254 (254 brightest)
     messageBody["transitiontime"] = transitionTime;      // 10 = 1sec;
     
     bodyBuffer = messageBody.toStyledString();
