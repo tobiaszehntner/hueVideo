@@ -337,7 +337,7 @@ void ofApp::hueSetColor(int lightNum, ofColor color, int transitionTime) {
     std::string putUrl = "http://" + hueBridgeIP + "/api/" + hueUser + "/lights/" + lightNumString + "/state";
     
     // Make sure color data is in int
-    int hue = color.getHue();
+    int hue = ofMap(color.getHue(), 0, 255, 0, 65535);
     int saturation = color.getSaturation();
     int brightness = color.getBrightness();
     
