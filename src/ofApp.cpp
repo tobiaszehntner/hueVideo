@@ -105,9 +105,11 @@ void ofApp::update(){
         
         if(hueUpdateTimer >= hueUpdateLast + hueUpdateDecisecond) {
             
+            hueColor.clear();
+            
             for (int i = 0; i < sampleNum; i++) {
-                hueColor[i] = averageColor[i];
-                hueSetColor(i, hueColor[i], hueUpdateDecisecond);
+                hueSetColor(i, averageColor[i], hueUpdateDecisecond);
+                hueColor.push_back(averageColor[i]);
             }
             hueUpdateLast = hueUpdateTimer;
         }
