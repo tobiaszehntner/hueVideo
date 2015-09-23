@@ -381,126 +381,137 @@ void ofApp::hueSetColor(int lightNum, ofColor color, int transitionTime) {
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     
-    if (key == OF_KEY_DOWN){
-        if(samplingArea.y+sampleGlobal.height < screen.getBottom() && samplingArea.y+samplingArea.height <screen.getBottom()) {
+    switch (key) {
+            
+        case OF_KEY_DOWN:
+            if(samplingArea.y+sampleGlobal.height < screen.getBottom() && samplingArea.y+samplingArea.height <screen.getBottom()) {
                 samplingArea.y += 5;
-        }
-    }
-    if (key == OF_KEY_UP){
-        if(samplingArea.y > screen.getTop() && samplingArea.y+samplingArea.height-sampleGlobal.height > screen.getTop()) {
-            samplingArea.y -= 5;;
-        }
-    }
-    if (key == OF_KEY_RIGHT){
-        if(samplingArea.x+sampleGlobal.width < screen.getRight() && samplingArea.x+samplingArea.width < screen.getRight()) {
-            samplingArea.x += 5;;
-        }
-    }
-    if (key == OF_KEY_LEFT){
-        if(samplingArea.x > screen.getLeft() && samplingArea.x+samplingArea.width-sampleGlobal.width > screen.getLeft()) {
-            samplingArea.x -= 5;;
-        }
-    }
-    
-    
-    if (key == 'n'){
-        if(samplingArea.x+samplingArea.width-sampleGlobal.width < screen.getRight() &&
-           samplingArea.x+samplingArea.width-sampleGlobal.width > screen.getLeft()) {
-            samplingArea.width -= 5;
-            samplingArea.x += 2.5;
-        }
-    }
-    if (key == 'm'){
-        if(samplingArea.getRight() < screen.getRight() &&
-           samplingArea.getLeft()+sampleGlobal.width > screen.getLeft()) {
-            samplingArea.width += 5;
-            samplingArea.x -= 2.5;
-        }
-    }
-    
-    if (key == 'c'){
-        if(samplingArea.getTop() > screen.getTop()+sampleGlobal.height) {
-            samplingArea.height -= 5;
-            samplingArea.y += 2.5;
-        }
-    }
-    if (key == 'v'){
-        if(samplingArea.getBottom() < screen.getBottom()) {
-            samplingArea.height += 5;
-            samplingArea.y -= 2.5;
-        }
-    }
-    
-    if (key == 'k'){
-        if(sampleNum == 2) {
-            samplingAreaPrevious = samplingArea;
-            samplingArea.setFromCenter(samplingArea.getCenter(), sampleGlobal.width, sampleGlobal.height);
-        }
-        if(sampleNum > 1) {
-            sampleNum--;
-        }
-    }
-    if (key == 'l'){
-        if(sampleNum == 1) {
-            samplingArea = samplingAreaPrevious;
-        }
-        if(sampleNum < 10) {
-            sampleNum++;
-            if(hueUpdateDecisecond < sampleNum) {
-                hueUpdateDecisecond = sampleNum;
             }
-        }
-    }
+            break;
+            
+        case OF_KEY_UP:
+            if(samplingArea.y > screen.getTop() && samplingArea.y+samplingArea.height-sampleGlobal.height > screen.getTop()) {
+                samplingArea.y -= 5;;
+            }
+            break;
+            
+        case OF_KEY_RIGHT:
+            if(samplingArea.x+sampleGlobal.width < screen.getRight() && samplingArea.x+samplingArea.width < screen.getRight()) {
+                samplingArea.x += 5;;
+            }
+            break;
+        
+        case OF_KEY_LEFT:
+            if(samplingArea.x > screen.getLeft() && samplingArea.x+samplingArea.width-sampleGlobal.width > screen.getLeft()) {
+                samplingArea.x -= 5;;
+            }
+            break;
+            
+        case 'n':
+            if(samplingArea.x+samplingArea.width-sampleGlobal.width < screen.getRight() &&
+               samplingArea.x+samplingArea.width-sampleGlobal.width > screen.getLeft()) {
+                samplingArea.width -= 5;
+                samplingArea.x += 2.5;
+            }
+            break;
+        
+        case 'm':
+            if(samplingArea.getRight() < screen.getRight() &&
+               samplingArea.getLeft()+sampleGlobal.width > screen.getLeft()) {
+                samplingArea.width += 5;
+                samplingArea.x -= 2.5;
+            }
+            break;
+            
+        case 'c':
+            if(samplingArea.getTop() > screen.getTop()+sampleGlobal.height) {
+                samplingArea.height -= 5;
+                samplingArea.y += 2.5;
+            }
+            break;
 
-    if (key == 'a'){
-        if(sampleSize > 20) {
-            sampleSize -= 5;
-        }
-    }
-    if (key == 's'){
-
-        if(samplingArea.y+sampleSize < screen.getBottom()
-           && samplingArea.y+samplingArea.height-sampleSize > screen.getTop()
-           && samplingArea.x+sampleSize < screen.getRight()
-           && samplingArea.x+samplingArea.width-sampleSize > screen.getLeft()
-           ) {
-            sampleSize += 5;
-        }
-    }
-    
-    if (key == 'q'){
-        if(smoothing < 0.98) {
-            smoothing += 0.01;
-        }
-    }
-    if (key == 'w'){
-        if(smoothing > 0.02) {
-            smoothing -= 0.01;
-        } else {
-            smoothing = 0;
-        }
-    }
-    
-    // Hue
-    if (key == 'o'){
-        if(!isHueOn) {
-            hueSetup(2);
-            isHueOn = true;
-        } else {
-            hueOffAll(2);
-            isHueOn = false;
-        }
-    }
-    if (key == 'u'){
-        if(hueUpdateDecisecond > sampleNum) {
-            hueUpdateDecisecond -= 1;
-        }
-    }
-    if (key == 'i'){
-        if(hueUpdateDecisecond < 60) {
-            hueUpdateDecisecond += 1;
-        }
-    }
+            
+        case 'v':
+            if(samplingArea.getBottom() < screen.getBottom()) {
+                samplingArea.height += 5;
+                samplingArea.y -= 2.5;
+            }
+            break;
+            
+        case 'k':
+            if(sampleNum == 2) {
+                samplingAreaPrevious = samplingArea;
+                samplingArea.setFromCenter(samplingArea.getCenter(), sampleGlobal.width, sampleGlobal.height);
+            }
+            if(sampleNum > 1) {
+                sampleNum--;
+            }
+            break;
+            
+        case 'l':
+            if(sampleNum == 1) {
+                samplingArea = samplingAreaPrevious;
+            }
+            if(sampleNum < 10) {
+                sampleNum++;
+                if(hueUpdateDecisecond < sampleNum) {
+                    hueUpdateDecisecond = sampleNum;
+                }
+            }
+            break;
+            
+        case 'a':
+            if(sampleSize > 20) {
+                sampleSize -= 5;
+            }
+            break;
+            
+        case 's':
+            if(samplingArea.y+sampleSize < screen.getBottom()
+               && samplingArea.y+samplingArea.height-sampleSize > screen.getTop()
+               && samplingArea.x+sampleSize < screen.getRight()
+               && samplingArea.x+samplingArea.width-sampleSize > screen.getLeft()
+               ) {
+                sampleSize += 5;
+            }
+            break;
+            
+        case 'q':
+            if(smoothing < 0.98) {
+                smoothing += 0.01;
+            }
+            break;
+            
+        case 'w':
+            if(smoothing > 0.02) {
+                smoothing -= 0.01;
+            } else {
+                smoothing = 0;
+            }
+            break;
+            
+        case 'o':
+            if(!isHueOn) {
+                hueSetup(2);
+                isHueOn = true;
+            } else {
+                hueOffAll(2);
+                isHueOn = false;
+            }
+            break;
+            
+        case 'u':
+            if(hueUpdateDecisecond > sampleNum) {
+                hueUpdateDecisecond -= 1;
+            }
+            break;
+            
+        case 'i':
+            if(hueUpdateDecisecond < 60) {
+                hueUpdateDecisecond += 1;
+            }
+            break;
+   }
 }
 
 //--------------------------------------------------------------
