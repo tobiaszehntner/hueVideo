@@ -20,6 +20,8 @@ void ofApp::setup(){
     
     ratio = video.getWidth()/screen.width; // 2.4
     
+    videoSpeed = 1;
+    
     // Sampling
     sampleNum = 9;
     sampleSize = 50; // pixels
@@ -75,7 +77,9 @@ void ofApp::update(){
         
     }
     
+    
     video.update();
+    video.setSpeed(videoSpeed);
     
     if(video.isFrameNew()) {
 
@@ -167,6 +171,7 @@ void ofApp::draw(){
               + "\n" + "[k-l]     Samples     = " + ofToString(sampleNum)
               + "\n" + "[a-s]     Sample size = " + ofToString(sampleSize)
               + "\n" + "[q-w]     Smoothing   = " + ofToString(smoothing, 2)
+              + "\n" + "[r-t]     Video speed = " + ofToString(video.getSpeed()) + "x"
               , 10, 170);
     if(isHueOn) {
         ofDrawBitmapString("[o]   Hue       = On", ofGetWindowWidth()-200, 170);
@@ -509,6 +514,28 @@ void ofApp::keyPressed(int key){
         case 'i':
             if(hueUpdateDecisecond < 60) {
                 hueUpdateDecisecond += 1;
+            }
+            break;
+            
+        case 't':
+            if(video.getSpeed() < 0) {
+                videoSpeed /= 2;
+            } else if(video.getSpeed() == 0) {
+                videoSpeed = 1;
+            } else if(video.getSpeed() < 10 && video.getSpeed() > 0) {
+                videoSpeed *= 2;
+            }
+            break;
+            
+        case 'r':
+            if(video.getSpeed() > 1) {
+                videoSpeed /= 2;
+            } else if(video.getSpeed() == 1) {
+                videoSpeed = 0;
+            }else if(video.getSpeed() == 0) {
+                videoSpeed = -1;
+            } else if (video.getSpeed() < 0 && video.getSpeed() > -10) {
+                videoSpeed *= 2;
             }
             break;
    }

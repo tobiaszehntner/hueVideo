@@ -26,6 +26,7 @@ class ofApp : public ofBaseApp{
     ofVideoPlayer video;
     float ratio;
     ofRectangle screen;
+    int videoSpeed;
     
     // Sampling
     int sampleNum;
