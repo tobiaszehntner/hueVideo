@@ -126,6 +126,7 @@ void ofApp::draw(){
     ofSetColor(255);
     video.draw(screen);
     
+    // Samples on screen
     for (int i = 0; i < sampleNum; i++) {
         ofSetColor(ofColor::green);
         ofNoFill();
@@ -136,6 +137,7 @@ void ofApp::draw(){
     ofSetColor(ofColor::red);
     ofLine(samplingArea.x, samplingArea.y, samplingArea.x+samplingArea.width, samplingArea.y+samplingArea.height);
     
+    // Video color samples
     ofSetColor(0);
     ofDrawBitmapString("Video", 10, 25);
     for (int i = 0; i < sampleNum; i++) {
@@ -146,6 +148,7 @@ void ofApp::draw(){
         ofDrawBitmapString(ofToString(i), 65 + (i*60), 25);
     }
     
+    // Hue color samples
     ofSetColor(0);
     ofDrawBitmapString("Hue", 10, 85);
     for (int i = 0; i < sampleNum; i++) {
@@ -161,10 +164,12 @@ void ofApp::draw(){
         ofDrawBitmapString(ofToString(i), 65 + (i*60), 85);
     }
     
+    // Transparent rectangle
     ofSetColor(0, 0, 0, 80);
     ofFill();
-    ofRect(screen.x, screen.y, screen.width, 90);
+    ofRect(screen.x, screen.y, screen.width, 100);
     
+    // Info text
     ofSetColor(255);
     ofDrawBitmapString("[c-v/n-m] X/Y Distr   = " + ofToString(samplingArea.width-sampleGlobal.width) + "/" + ofToString(samplingArea.height-sampleGlobal.height)
               + "\n" + "[arrows]  Center      = " + ofToString(samplingArea.getCenter(), 1)
@@ -382,6 +387,7 @@ void ofApp::hueSetColor(int lightNum, ofColor color, int transitionTime) {
         ofLogError("ofApp::setup") << "Got unknown exception.";
     }
 }
+
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
